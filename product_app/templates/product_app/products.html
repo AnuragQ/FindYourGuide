@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+</head>
+<body>
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Currency</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#product-table').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{% url 'products_api' %}",
+                "columns": [
+                    {"data": "name"},
+                    {"data": "description"},
+                    {"data": "price"},
+                    {"data": "currency"},
+                    {
+                        "data": "action",
+                        "render": function(data, type, full, meta) {
+                            //console.log(data, type, full)
+                            return '<a href="/payment/products/' + full['id'] + '">Proceed to Payment</a>';
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>
