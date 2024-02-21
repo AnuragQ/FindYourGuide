@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,3 +125,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Find information here: https://docs.stripe.com/keys
 STRIPE_PUBLISHABLE_KEY = 'pk_test_A7jK4iCYHL045qgjjfzAfPxu'
 STRIPE_SECRET_KEY = 'sk_test_Hrs6SAopgFPF0bZXSN3f6ELN'
+
+# For loading files
+MEDIA_URL = '/product_images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '') #product_images

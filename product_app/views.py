@@ -18,6 +18,22 @@ class ProductListView(ListView):
     template_name = 'product_app/products.html'
 
 
+class ProductView(TemplateView):
+    template_name = 'product_app\\product.html'
+
+    def get_context_data(self, product_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get product information (you can adjust the logic to get the specific product you want)
+        # product_id = self.request.GET.get('product_id')  # Assuming product_id is passed in the query parameters
+        product = Product.objects.get(pk=product_id)
+
+        # Add product information to the context
+        context['product'] = product
+
+        return context
+
+
 class ProductAPI(View):
 
     def get(self, request):
@@ -38,6 +54,7 @@ def product_list_json(request):
         'price': product.price,
         'currency': product.currency,
         'action': 'Proceed to Payment',
-        'id': product.id  # Assuming product has id field
+        'id': product.id,
+        'image': product.image.url
     } for product in products]
     return JsonResponse({'data': data})

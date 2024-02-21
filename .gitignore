@@ -2,3 +2,7 @@
 /FindYourGuide/__pycache__/
 /**/__pycache__/
 /**/migrations/__pycache__/
+/main_app/migrations/__pycache__/
+/payment_app/migrations/__pycache__/
+/product_images/
+/product_app/migrations/__pycache__/

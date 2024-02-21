@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 </head>
 <body>
+
+ <div class="m-5"> <h3> FindYourGuide </h3></div>
     <table id="product-table">
         <thead>
             <tr>
@@ -13,6 +15,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Currency</th>
+                <th>Image</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -31,13 +34,20 @@
                     {"data": "description"},
                     {"data": "price"},
                     {"data": "currency"},
+                    {"data": "image", "render":function(data,type, full, meta){
+                        return `<div style="text-align: center;"><img src="${full.image}" alt="${full.name}" width="100"></div>`;
+                    }
+                    },
                     {
                         "data": "action",
                         "render": function(data, type, full, meta) {
                             //console.log(data, type, full)
-                            return '<a href="/payment/products/' + full['id'] + '">Proceed to Payment</a>';
+                            return '<a href="/products/' + full['id'] + '">View and Payment</a>';
                         }
                     }
+                ],
+                "columnDefs": [
+                   { "className": "dt-center", "targets": "_all" } // Center-align all columns
                 ]
             });
         });

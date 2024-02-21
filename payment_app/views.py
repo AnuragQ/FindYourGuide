@@ -1,16 +1,13 @@
 import json
-from decimal import Decimal
 
 import stripe
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.http.response import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.views.generic import View
-from payment_app.models import Product, Payment
-from django.conf import settings
+
+from payment_app.models import Product
 from .models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -21,26 +18,9 @@ def payments_view(request):
     return render(request, 'payment_app/payments.html', {'payments': payments})
 
 
-class PaymentView(TemplateView):
-    template_name = 'payment_app\\payment.html'
-
-    def get_context_data(self, product_id, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Get product information (you can adjust the logic to get the specific product you want)
-        # product_id = self.request.GET.get('product_id')  # Assuming product_id is passed in the query parameters
-        product = Product.objects.get(pk=product_id)
-
-        # Add product information to the context
-        context['product'] = product
-
-        return context
-
-
 # def product_payment(self, request):
-#    return render(request, template_name="payment_app\payment.html")
+#    return render(request, template_name="payment_app\product.html")
 
-# Record the payment here
 
 def success_view(request):
     session_id = request.GET.get('session_id')
@@ -63,7 +43,7 @@ def success_view(request):
             product=product,
             session_id=session_id
         )
-        print("Payment created successfully")
+        print(f"Payment {payment.id} created successfully")
     else:
         print("Payment already exists")
 
@@ -111,6 +91,7 @@ def create_checkout_session(request):
                     'unit_amount': int(product.price * 100),  # Convert price to cents
                     'product_data': {
                         'name': product.name,
+                        'images': [domain_url + product.image.url]
                     },
                 },
             }
