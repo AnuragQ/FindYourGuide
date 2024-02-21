@@ -15,7 +15,7 @@ class Product(models.Model):
     #upload = models.ImageField(upload_to='uploads/% Y/% m/% d/')
 
     def __str__(self):
-        return f"{self.id}:  {self.name} {self.description} costs  {self.price} by {self.currency}"
+        return f"{self.id}: {self.name} {self.description} costs {self.price} by {self.currency}"
 
     class Meta:
         ordering = ['-price']

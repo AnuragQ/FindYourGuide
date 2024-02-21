@@ -12,4 +12,4 @@ class Payment(models.Model):
     session_id = models.CharField(max_length=100, unique=True, null=True)
 
     def __str__(self):
-        return f"{self.amount} {self.currency} paid on  {self.paid_at} by {self.payer}"
+        return f"{self.amount} {self.currency} paid on {self.paid_at} by {self.payer}"
