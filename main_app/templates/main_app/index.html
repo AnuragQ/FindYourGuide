@@ -73,11 +73,11 @@
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
                     <!-- If the user is authenticated, show a "Logout" button -->
-                    <a class="nav-item nav-link" >Logout</a>
+                    <a class="nav-item nav-link" href="{% url 'logout' %}" >Logout</a>
                 {% else %}
                     <!-- If the user is not logged in, show "Login" and "Signup" buttons -->
-                    <a class="nav-item nav-link" >Login</a>
-                    <a class="nav-item nav-link" >Signup</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}" >Login</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}" >Signup</a>
                 {% endif %}
             </div>
         </div>
