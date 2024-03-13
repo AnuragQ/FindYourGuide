@@ -5,12 +5,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 #
 class UserProfile(User):
-    USER_TYPE_CHOICES = [
-        ('guest', 'Guest'),
-        ('host', 'Host'),
-    ]
-    #email = models.EmailField(unique=True)
-    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='guest')
+    # USER_TYPE_CHOICES = [
+    #     ('guest', 'Guest'),
+    #     ('host', 'Host'),
+    # ]
+    # #email = models.EmailField(unique=True)
+    # user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='guest')
+    
     def __str__(self):
         return self.username
 
@@ -18,7 +19,7 @@ class Offering(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    
+    host_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='offerings')
     availability_start_date = models.DateField()
     availability_end_date = models.DateField()
     #type of enum
@@ -42,7 +43,7 @@ class Comment(models.Model):
 class Booking(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='bookings')
     guest_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    host_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    # host_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     booking_start_date = models.DateField()
     booking_end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
