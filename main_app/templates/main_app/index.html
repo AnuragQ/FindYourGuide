@@ -1,72 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FindYourGuide</title>
-    <style>
-        /* Add your CSS styles for the layout here */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
+{% load static %}
+<html >
+  <head>
+    <title>Find Your Guide</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="author" content="" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/normalize.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'icomoon/icomoons.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/vendor.css' %}"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- script
+    ================================================== -->
+    <script src="{% static 'js/modernizr.js' %}"></script>
+        
+    </script>
+  </head>
+  <body>
+    <div class="preloader-wrapper">
+      <div class="preloader"></div>
+    </div>
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    <div class="search-popup">
+      <div class="search-popup-container">
+        <form role="search" method="get" class="search-form" action="">
+          <input
+            type="search"
+            id="search-form"
+            class="search-field"
+            placeholder="Type and press enter"
+            value=""
+            name="s"
+          />
+          <button type="submit" class="search-submit">
+            <a href="#"><i class="icon icon-search"></i></a>
+          </button>
+        </form>
 
-        header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
+        <h5 class="cat-list-title">Browse Categories</h5>
 
-        nav {
-            margin-top: 20px;
-            text-align: center;
-        }
+        <ul class="cat-list">
+          <li class="cat-list-item">
+            <a href="shop.html" title="Men Jackets">Men Jackets</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Fashion">Fashion</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Casual Wears">Casual Wears</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Women">Women</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Trending">Trending</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Hoodie">Hoodie</a>
+          </li>
+          <li class="cat-list-item">
+            <a href="shop.html" title="Kids">Kids</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
+        <header id="header">
+      <div id="header-wrap">
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
+        <nav class="primary-nav padding-small">
+          <div class="container">
+            <div class="row d-flex align-items-center">
+              <div class="col-lg-2 col-md-2">
+                <div class="main-logo">
+                  <a href="index.html">
+                    <img src="{% static 'images/main-logo.png' %}"
+                    alt="logo">
+                  </a>
+                </div>
+              </div>
+              <div class="col-lg-10 col-md-10">
+                <div class="navbar">
 
-<header>
-    <h1>FindYourGuide</h1>
-    <nav>
-        <a href="/products">Products</a>
-        <a href="/payment">Payment</a>
-    </nav>
-</header>
+                  <div id="main-nav" class="stellarnav d-flex justify-content-end right">
+                    <ul class="menu-list">
 
-<div class="container">
-    <h2>Welcome to FindYourGuide</h2>
-    <!-- Add your main content here -->
+                      <li class="menu-item has-sub">
+                        <a href="/"
+                        class="item-anchor active d-flex align-item-center" data-effect="Home">Home<i class="icon icon-chevron-down"></i></a>
+                        
+                      </li>
+
+                      
+                      <li class="menu-item has-sub">
+                          <a href="/products" class="item-anchor d-flex align-item-center" data-effect="Shop">Products<i class="icon icon-chevron-down"></i></a>
+                          
+                        </li>
+                        <li><a href="/payment"
+                          class="item-anchor" data-effect="About">Payments</a></li>
+
+                      <li class="menu-item has-sub">
+                        <a href="#" class="item-anchor d-flex align-item-center" data-effect="Pages">Pages<i class="icon icon-chevron-down"></i></a>
+                        
+                      </li>
+
+                      <li class="menu-item has-sub">
+                        <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>
+                        
+                      </li>
+
+                      <li><a href="contact.html" class="item-anchor" data-effect="Contact">Contact</a></li>
+
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+<div>
+    {% block body_block %}  {% endblock %}
 </div>
 
-<footer>
-    <p>&copy; 2024 FindYourGuide. All rights reserved.</p>
-</footer>
+<!-- 
+    <footer id="footer">
+      <div class="container">
+        <div class="footer-menu-list">
+          <div class="row d-flex flex-wrap justify-content-between">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="footer-menu">
+                <h5 class="widget-title">Ultras</h5>
+                <ul class="menu-list list-unstyled">
+                  <li class="menu-item">
+                    <a href="about.html">About us</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Conditions </a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="blog.html">Our Journals</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Careers</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Affiliate Programme</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Ultras Press</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="footer-menu">
+                <h5 class="widget-title">Customer Service</h5>
+                <ul class="menu-list list-unstyled">
+                  <li class="menu-item">
+                    <a href="faqs.html">FAQ</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="contact.html">Contact</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Privacy Policy</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Returns & Refunds</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Cookie Guidelines</a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="#">Delivery Information</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="footer-menu">
+                <h5 class="widget-title">Contact Us</h5>
+                <p>
+                  Do you have any questions or suggestions?
+                  <a href="#" class="email">ourservices@ultras.com</a>
+                </p>
+                <p>
+                  Do you need assistance? Give us a call. <br />
+                  <strong>+57 444 11 00 35</strong>
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="footer-menu">
+                <h5 class="widget-title">Forever 2018</h5>
+                <p>
+                  Cras mattis sit ornare in metus eu amet adipiscing enim.
+                  Ullamcorper in orci, ultrices integer eget arcu. Consectetur
+                  leo dignissim lacus, lacus sagittis dictumst.
+                </p>
+                <div class="social-links">
+                  <ul class="d-flex list-unstyled">
+                    <li>
+                      <a href="#">
+                        <i class="icon icon-facebook"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="icon icon-twitter"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="icon icon-youtube-play"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="icon icon-behance-square"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+    </footer>
 
-</body>
+    <div id="footer-bottom">
+      <div class="container">
+        <div
+          class="d-flex align-items-center flex-wrap justify-content-between"
+        >
+          <div class="copyright">
+            <p>
+              Freebies by
+              <a href="https://templatesjungle.com/">Templates Jungle</a>
+              Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+            </p>
+          </div>
+          <div class="payment-method">
+            <p>Payment options :</p>
+            <div class="card-wrap">
+              <img src="images/visa-icon.jpg" alt="visa" />
+              <img src="images/mastercard.png" alt="mastercard" />
+              <img src="images/american-express.jpg" alt="american-express" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <script src="js/jquery-1.11.0.min.js"> -->
+    <script src="{% static 'js/jquery-1.11.0.min.js' %}">
+        
+    </script>
+    <!-- <script src="js/plugins.js"> -->
+    <script src="{% static 'js/plugins.js' %}">
+
+    </script>
+    <!-- <script src="js/script.js"> -->
+    <script src="{% static 'js/script.js' %}">
+
+    </script>
+  </body>
 </html>
