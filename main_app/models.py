@@ -18,6 +18,8 @@ class Offering(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
 
+
+
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

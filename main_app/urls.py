@@ -8,3 +8,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('offerings/<int:pk>/', views.offering_detail, name='offering_detail'),
 ]
+
