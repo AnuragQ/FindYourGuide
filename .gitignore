@@ -21,6 +21,6 @@ __pycache__/
 *.po
 *.mo
 db.sqlite3
-/static/
+# /static/
 .DS_Store
 *.pyc
