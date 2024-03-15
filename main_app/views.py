@@ -1,9 +1,10 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Offering
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import CustomSignUpForm
+from django.contrib.auth import logout
 
 def index(request):
     return render(request, 'main_app/index.html')
@@ -22,3 +23,7 @@ class SignUpView(CreateView):
         response = super().form_valid(form)
         # Additional actions after successful form submission, if any
         return response
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')  # Redirect to the homepage after logout

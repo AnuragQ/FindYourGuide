@@ -138,9 +138,14 @@
                         
                       </li>
 
-                      <li><a href="{% url 'signup' %}" class="item-anchor" data-effect="Contact">Sign Up</a></li> <!-- Update Sign Up link -->
-                      <li><a href="" class="item-anchor" data-effect="Contact">Login</a></li> <!-- Update Login link -->
-
+                      {% if user.is_authenticated %}
+                    <!-- If the user is authenticated, show the Logout button -->
+                    <li><a href="{% url 'logout' %}" class="item-anchor" data-effect="Contact">Logout</a></li>
+                {% else %}
+                    <!-- If the user is not authenticated, show the Sign Up and Login buttons -->
+                    <li><a href="{% url 'signup' %}" class="item-anchor" data-effect="Contact">Sign Up</a></li>
+                    <li><a href="" class="item-anchor" data-effect="Contact">Login</a></li>
+                {% endif %}
                     </ul>
 
                   </div>
