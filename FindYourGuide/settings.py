@@ -132,4 +132,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '') #product_images
 LOGIN_REDIRECT_URL = 'index'
 
 
-
+AUTH_USER_MODEL = 'main_app.User'
