@@ -144,7 +144,7 @@
                 {% else %}
                     <!-- If the user is not authenticated, show the Sign Up and Login buttons -->
                     <li><a href="{% url 'signup' %}" class="item-anchor" data-effect="Contact">Sign Up</a></li>
-                    <li><a href="" class="item-anchor" data-effect="Contact">Login</a></li>
+                    <li><a href="{% url 'login' %}" class="item-anchor" data-effect="Contact">Login</a></li>
                 {% endif %}
                     </ul>
 
