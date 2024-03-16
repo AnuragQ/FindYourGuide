@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 
 # Create your models here.
 #
@@ -27,8 +28,9 @@ class Offering(models.Model):
         ('accomodation', 'Accomodation'),
         ('sight-seeing', 'Sight-seeing'),
         ('food-tour', 'Food-tour'),
+        ('ride-share','Ride-Share')
     ]
-    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES)
+    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES, default='accomodation')
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

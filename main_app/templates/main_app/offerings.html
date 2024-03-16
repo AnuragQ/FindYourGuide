@@ -1,0 +1,34 @@
+{% extends 'main_app/index.html' %} 
+{% load static %} 
+<head>
+    <link rel="stylesheet" href="{% static 'offerstyle.css' %}" type="text/css"> 
+</head>
+
+{% block body_block %}
+    <p>test me </p>
+    <div class="container">
+    <div class="filter-pane">
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+    </div>
+    <div class="results-pane">
+        {#    Lisitng logic#}
+        {% if list_of_offerings %}
+        <ul>
+        {% for listing in list_of_offerings %}
+            <li>
+                 <a href="{% url 'offering_detail' listing.pk %}">{{ listing.title }} - {{ listing.description }}</a>
+            </li>
+            
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+    
+    
+    
+{% endblock %}

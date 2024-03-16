@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-pane {
+    width: 30%; /* Adjust width as needed */
+}
+.results-pane {
+    width: 60%; /* Adjust width as needed */
+}
+p {
+    color: red;
+}
