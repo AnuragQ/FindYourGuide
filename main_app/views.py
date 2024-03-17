@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import CustomSignUpForm
 from django.contrib.auth import logout
+from .models import Offering, Booking
 from django.db.models import Q
 from .models import Booking
 from .forms import BookingForm
@@ -87,3 +88,11 @@ def cancel_booking(request, booking_id):
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
+
+def profile(request):
+    return render(request, 'main_app/profile.html')
+
+
+def editprofile(request):
+    return render(request, 'main_app/editprofile.html')
+

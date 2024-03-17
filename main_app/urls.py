@@ -18,4 +18,7 @@ urlpatterns = [
          views.create_booking, name='create_booking'),
     path('cancel_booking/<int:booking_id>', views.cancel_booking, name='cancel_booking'),
     # path('bookings/<int:pk>/', views.offering_detail, name='offering_detail'),
-]
+
+    path('profile', views.profile, name='profile'),
+    path('editprofile/', views.editprofile, name='editprofile'),
+ ]
