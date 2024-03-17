@@ -19,11 +19,6 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{% static 'icomoon/icomoons.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
       media="all"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
@@ -31,6 +26,12 @@
       rel="stylesheet"
       type="text/css"
       href="{% static 'css/vendor.css' %}"
+    />
+
+    <link
+    rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/profile.css' %}"
     />
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -136,6 +137,10 @@
                       <li class="menu-item has-sub">
                         <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>
                         
+                      </li>
+                    
+                    <li class="menu-item has-sub">
+                        <a href="{%  url 'profile' %}" class="item-anchor d-flex align-item-center" data-effect="Blog">Profile<i class="icon icon-chevron-down"></i></a>
                       </li>
 
                       {% if user.is_authenticated %}

@@ -1,0 +1,52 @@
+{% extends 'main_app/index.html' %} {% load static %}
+
+<!-- {% block title %}Find Your Guide{% endblock %} -->
+
+{% block body_block %}
+
+<!-- list all the Offering from the context -->
+<div>
+  <div class="col-md-8 offset-md-2">
+    <form action="{% url 'index' %}" method="GET">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search for..."
+          name="search_query"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="container mt-5">
+    <div class="row">
+      {% for offering in offerings %}
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <img
+            class="card-img-top"
+            src="{{ offering.image.url }}"
+            alt="{{ offering.title }}"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ offering.title }}</h5>
+            <p class="card-text">{{ offering.description }}</p>
+            <a
+              href="{% url 'offering_detail' offering.id %}"
+              class="btn btn-primary"
+              >View</a
+            >
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

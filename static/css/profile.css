@@ -1,0 +1,38 @@
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    flex: 0 0 auto;
+    margin-right: 20px;
+}
+
+.profile-picture img {
+    width: 150px; /* Adjust the width as needed */
+    height: auto;
+}
+
+.profile-details {
+    flex: 1 1 auto;
+}
+
+.edit-profile-button {
+    margin-top: 10px;
+}
+
+/* Additional styling for service options */
+.service-options {
+    margin-bottom: 20px;
+}
+
+.service-options button {
+    margin-right: 10px;
+}
+
+/* Add your custom CSS styles here */
+.hidden {
+    display: none;
+}
+
