@@ -1,54 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My payments</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-<style>
-  .center-text {
-    text-align: center;
-  }
-</style>
-</head>
-<body>
-    <table id="payments-table" class="display">
-        <thead>
-            <tr>
-                <th>Amount</th>
-                <th>Currency</th>
-                <th>Paid At</th>
-                <th>Payer</th>
-                <th>Product</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for payment in payments %}
-            <tr class="center-text">
-                <td>{{ payment.amount }}</td>
-                <td>{{ payment.currency }}</td>
-                <td>{{ payment.paid_at }}</td>
-                <td>{{ payment.payer }}</td>
-               <td class="center-text" style="text-align: center;">
-    <div style="display: flex; align-items: center; justify-content: center;">
-        {% if payment.product.image %}
-            <img src="{{ payment.product.image.url }}" alt="{{ payment.product.name }}" width="50" style="margin-right: 10px;">
-        {% endif %}
-        <span>{{ payment.product.name }}</span>
-    </div>
-</td>
+{% extends 'main_app/index.html' %} {% block body_block %}
+<div class="container">
+  <h1 class="title">Payments</h1>
+  <table id="payments-table" class="display">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Currency</th>
+        <th>Paid At</th>
+        <th>Payer</th>
+        <th>Product</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in payments %}
+      <tr class="center-text">
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.currency }}</td>
+        <td>{{ payment.paid_at }}</td>
+        <td>{{ payment.payer }}</td>
+        <td class="center-text" style="text-align: center">
+          <div
+            style="display: flex; align-items: center; justify-content: center"
+          >
+            {% if payment.product.image %}
+            <img
+              src="{{ payment.product.image.url }}"
+              alt="{{ payment.product.name }}"
+              width="50"
+              style="margin-right: 10px"
+            />
+            {% endif %}
+            <span>{{ payment.product.name }}</span>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#payments-table').DataTable();
-        });
-    </script>
-</body>
-</html>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#payments-table").DataTable();
+    });
+  </script>
+</div>
+{% endblock %}

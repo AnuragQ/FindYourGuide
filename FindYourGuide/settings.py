@@ -132,6 +132,7 @@ STRIPE_SECRET_KEY = 'sk_test_Hrs6SAopgFPF0bZXSN3f6ELN'
 # For loading files
 MEDIA_URL = '/product_images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '') #product_images
+LOGIN_REDIRECT_URL = 'index'
 
 
-
+AUTH_USER_MODEL = 'main_app.User'
