@@ -48,3 +48,5 @@ class Booking(models.Model):
     booking_end_date = models.DateField(default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    no_of_guests = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    
