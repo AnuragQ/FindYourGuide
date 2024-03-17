@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import CustomSignUpForm
 from django.contrib.auth import logout
+from .models import Offering, Booking
 from django.db.models import Q
 
 
@@ -45,3 +46,11 @@ class SignUpView(CreateView):
 def logout_view(request):
     logout(request)
     return redirect('index')  # Redirect to the homepage after logout
+
+def profile(request):
+    return render(request, 'main_app/profile.html')
+
+
+def editprofile(request):
+    return render(request, 'main_app/editprofile.html')
+
