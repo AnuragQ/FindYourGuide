@@ -8,6 +8,8 @@ from .forms import CustomSignUpForm, OfferingForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
 from django.db.models import Q
+from .models import Booking
+from .forms import BookingForm
 
 
 def index(request):
@@ -27,18 +29,15 @@ def index(request):
 
 def offering_detail(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
-    if request.method == 'POST':
-        form = OfferingForm(request.POST)
-        if form.is_valid():
-            # Process the form data if valid
-            form.save()
-            print('hello homepage inside save')
-
-            # Redirect to a success page or homepage
-            return render(request, 'main_app/offering_detail.html', {'offering': offering})
-    else:
-        form = OfferingForm()
-    return render(request, 'main_app/offering_detail.html', {'form': form, 'offering': offering})
+    # user_bookings containds the ids of the bookings made by the current user
+    user_bookings = []
+    # print('here')
+    if request.user.is_authenticated:
+        for booking in Booking.objects.filter(
+                guest_user=request.user):
+            user_bookings.append(booking.offering.id)
+    # print(user_bookings)
+    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings})
 
 
 class SignUpView(CreateView):
@@ -59,6 +58,37 @@ def logout_view(request):
     logout(request)
     return redirect('index')  # Redirect to the homepage after logout
 
+
+def create_booking(request, offering_id):
+    form = BookingForm()
+    # if request.method == 'POST':
+    offering = Offering.objects.get(id=offering_id)
+    form = BookingForm()
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.offering = offering
+            booking.guest_user = request.user
+            booking.save()
+            return redirect('index')
+    context = {'form': form}
+
+    # return redirect('index')
+    return render(request, 'main_app/booking.html', context)
+
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    print(booking)
+    # Ensure that only the user who made the booking can cancel it
+    if request.user == booking.guest_user:
+        booking.delete()
+        # Redirect to a booking list page or any other page
+        return redirect('index')
+    else:
+        # Handle unauthorized cancel attempt (optional)
+        return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
 def profile(request):
     return render(request, 'main_app/profile.html')

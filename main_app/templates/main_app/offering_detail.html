@@ -18,6 +18,20 @@
         <p class="lead">{{ offering.description }}</p>
       
       <div class="mt-4">
+  <!-- button to book the offering -->
+{% if user.is_authenticated %}
+    {% if offering.id in user_bookings %}
+        <form action="{% url 'cancel_booking' offering.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Cancel Booking">
+        </form>
+    {% else %}
+        <a href="{% url 'create_booking' offering.id %}" class="btn btn-primary">Book</a>
+    {% endif %}
+{% else %}
+    <!-- Display something else for non-authenticated users, like a login/register link -->
+{% endif %}
+</form>
   <h2>Ratings</h2>
   {% if offering.ratings.all %}
     <ul class="list-group">
