@@ -13,4 +13,6 @@ urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', success_url='/'), name='login'),  # URL pattern for login
     path('logout/', views.logout_view, name='logout'),  # URL pattern for logout
+    path('profile', views.profile, name='profile'),
+    path('editprofile/', views.editprofile, name='editprofile'),
  ]
