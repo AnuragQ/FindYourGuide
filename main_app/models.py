@@ -29,6 +29,10 @@ class Offering(models.Model):
         ('food-tour', 'Food-tour'),
     ]
     offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES,default='accomodation')
+    offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
+    offering_time = models.TimeField(null=True, blank=True)
+    offering_description = models.TextField(null=True, blank=True)
+
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(User, on_delete=models.CASCADE)

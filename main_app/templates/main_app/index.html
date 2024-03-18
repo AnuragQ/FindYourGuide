@@ -129,15 +129,15 @@
                         <li><a href="/payment"
                           class="item-anchor" data-effect="About">Payments</a></li>
 
-                      <li class="menu-item has-sub">
-                        <a href="#" class="item-anchor d-flex align-item-center" data-effect="Pages">Pages<i class="icon icon-chevron-down"></i></a>
-                        
-                      </li>
-
-                      <li class="menu-item has-sub">
-                        <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>
-                        
-                      </li>
+{#                      <li class="menu-item has-sub">#}
+{#                        <a href="#" class="item-anchor d-flex align-item-center" data-effect="Pages">Pages<i class="icon icon-chevron-down"></i></a>#}
+{#                        #}
+{#                      </li>#}
+{##}
+{#                      <li class="menu-item has-sub">#}
+{#                        <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>#}
+{#                        #}
+{#                      </li>#}
                     
                     <li class="menu-item has-sub">
                         <a href="{%  url 'profile' %}" class="item-anchor d-flex align-item-center" data-effect="Blog">Profile<i class="icon icon-chevron-down"></i></a>
@@ -166,6 +166,11 @@
 <div>
     {% block body_block %}  {% endblock %}
 </div>
+    
+{#    <div class="btn-wrap">#}
+{#                      <a href="{% url 'offerings' %}" class="btn btn-light btn-medium d-flex align-items-center" tabindex="0">Add Offering<i class="icon icon-arrow-io"></i>#}
+{#                      </a>#}
+{#                    </div>#}
 
 <!-- 
     <footer id="footer">

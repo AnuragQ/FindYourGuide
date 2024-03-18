@@ -8,6 +8,9 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
+    # path('offering_detail/', views.offering_detail, name='offering_detail'),
+    path('offerings/<int:pk>/edit/', views.offering_edit, name='offering_edit'),
+    path('offerings/<int:pk>/delete/', views.offering_delete, name='offering_delete'),
     path('offerings/<int:pk>/', views.offering_detail, name='offering_detail'),
     path('payment/', include('payment_app.urls', namespace='payment_app')),
     path('signup/', SignUpView.as_view(), name='signup'),
@@ -21,4 +24,5 @@ urlpatterns = [
 
     path('profile', views.profile, name='profile'),
     path('editprofile/', views.editprofile, name='editprofile'),
- ]
+    path('addoffering/', views.addoffering, name='addoffering'),
+]

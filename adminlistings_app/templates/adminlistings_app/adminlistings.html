@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Listings</title>
+    <style>
+        /* Add CSS styles to adjust image size */
+        .listing-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Listings</h1>
+
+    <!-- Loop through admin listings and display details -->
+    {% for adminlisting in object_list %}
+        <div>
+            <h2>{{ adminlisting.name }}</h2>
+
+            <p>Description: {{ adminlisting.description }}</p>
+            <p>Price: {{ adminlisting.price }} {{ adminlisting.currency }}</p>
+            <p>Guide Name: {{ adminlisting.guidename }}</p>
+
+            <!-- Adjust the image size to fit within the window -->
+            <img src="{{ adminlisting.image.url }}" alt="{{ adminlisting.name }}" class="listing-image">
+            <!-- Add button or link for action -->
+        </div>
+        <hr>
+    {% empty %}
+        <p>No admin listings available.</p>
+    {% endfor %}
+</body>
+</html>
