@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Offering, User
@@ -29,6 +30,8 @@ def index(request):
 
 def offering_detail(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
+    # Fetch all fields of the offering
+    offering_fields = offering._meta.get_fields()
     # user_bookings containds the ids of the bookings made by the current user
     user_bookings = []
     # print('here')
@@ -37,7 +40,72 @@ def offering_detail(request, pk):
                 guest_user=request.user):
             user_bookings.append(booking.offering.id)
     # print(user_bookings)
-    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings})
+    form = OfferingForm(instance=offering)  # Instantiate the form with the offering object
+    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
+                                                             'offering_fields': offering_fields, 'form': form})
+
+
+# def offering_detail(request, pk):
+#     offering = get_object_or_404(Offering, pk=pk)
+#     user_bookings = []
+#
+#     # Check if the user is authenticated
+#     if request.user.is_authenticated:
+#         # Check if the current user is the host of the offering
+#         if offering.host_user == request.user:
+#             # Fetch all fields of the offering
+#             offering_fields = offering._meta.get_fields()
+#             # Populate user_bookings with the ids of bookings made by the current user
+#             for booking in Booking.objects.filter(guest_user=request.user):
+#                 user_bookings.append(booking.offering.id)
+#             # Instantiate the form with the offering object
+#             form = OfferingForm(instance=offering)
+#             # Check if the request is POST (form submission)
+#             if request.method == 'POST':
+#                 # Check if the form data is valid
+#                 form = OfferingForm(request.POST, request.FILES, instance=offering)
+#                 if form.is_valid():
+#                     form.save()
+#                     # messages.success(request, 'Offering updated successfully.')
+#                     return redirect('offering_detail', pk=pk)
+#             return render(request, 'main_app/offering_detail.html', {'form': form})
+#         else:
+#             # If the current user is not the host, display a message and redirect
+#             # messages.error(request, 'You are not authorized to edit this offering.')
+#             return redirect('offering_detail', pk=pk)
+#     else:
+#         # If the user is not authenticated, redirect to login page
+#         # messages.error(request, 'Please log in to edit this offering.')
+#         return redirect('login')
+
+@login_required
+def offering_edit(request, pk):
+    offering = get_object_or_404(Offering, pk=pk)
+    # Check if the current user is the host user of the offering
+    if request.user == offering.host_user:
+        if request.method == 'POST':
+            form = OfferingForm(request.POST, request.FILES, instance=offering)
+            if form.is_valid():
+                form.save()
+                return redirect('offering_detail', pk=pk)
+        else:
+            form = OfferingForm(instance=offering)
+        return render(request, 'main_app/editoffering.html', {'form': form})
+    else:
+        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+
+
+@login_required
+def offering_delete(request, pk):
+    offering = get_object_or_404(Offering, pk=pk)
+    # Check if the current user is the host user of the offering
+    if request.user == offering.host_user:
+        if request.method == 'POST':
+            offering.delete()
+            return redirect('homepage')  # Redirect after deletion
+        return render(request, 'main_app/deleteoffering.html', {'offering': offering})
+    else:
+        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
 
 
 class SignUpView(CreateView):
@@ -89,6 +157,7 @@ def cancel_booking(request, booking_id):
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
+
 
 def profile(request):
     return render(request, 'main_app/profile.html')
