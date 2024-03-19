@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Offering
+from .models import Offering , Like,Comment
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -11,6 +11,21 @@ def index(request):
     return render(request, 'main_app/index.html')
 
 from django.contrib.auth.decorators import login_required
+
+def offering(req,pk):
+    offering = get_object_or_404(Offering, pk=pk)
+    comments = offering.comments.all()
+    return render(req,'main_app/offer_detail.html',{'offering':offering, 'comments':comments})
+
+
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    like, created = Like.objects.get_or_create(user=request.user, comment=comment)
+
+    if not created:
+        # Like already exists, so you might want to unlike it or do nothing
+        like.delete()
+    return redirect('offerings', pk=comment.offering.pk)
 
 @login_required
 def offering_detail(request, pk):

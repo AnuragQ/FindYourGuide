@@ -41,6 +41,25 @@ class Comment(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    def __str__(self):
+        return f'Comment by {self.user.username} on {self.created_at}'
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class Like(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        # Ensure a user can only like a comment once
+        unique_together = ('comment', 'user')
+    def __str__(self):
+        return f'Like by {self.user.username} for comment {self.comment.id}'
+
 
 class Booking(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='bookings')

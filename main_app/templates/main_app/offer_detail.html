@@ -1,0 +1,137 @@
+{% extends 'main_app/index.html' %} {% block body_block %}
+{#   styles for offering Card #}
+    <style>
+    .offering-card {
+        max-width: 540px;
+        margin: auto;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+    .offering-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e3e6e8;
+        padding: 20px;
+    }
+    .offering-body {
+        padding: 20px;
+    }
+    .offering-footer {
+        background-color: #f8f9fa;
+        padding: 10px;
+        text-align: center;
+        border-top: 1px solid #e3e6e8;
+    }
+    .price-tag {
+        color: #28a745;
+        font-weight: bold;
+    }
+    {#styles for comments #}
+    
+    .comment, .reply {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.comment-body, .reply-body {
+    margin-bottom: 5px;
+}
+
+.comment-footer, .reply-footer {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.replies {
+    margin-left: 20px;
+}
+
+.comment-like, .comment-reply {
+    text-decoration: none;
+    color: #007bff;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.comment-like:hover, .comment-reply:hover {
+    text-decoration: underline;
+}
+{#expanding comment dispalys #}
+            .comment { margin-bottom: 20px; }
+        .full-comment { display: none; }
+</style>
+    
+
+
+{#  Offering HTML#}
+
+<div class="card offering-card">
+    <div class="offering-header">
+        <h5 class="card-title">{{ offering.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ offering.get_offering_type_display }}</h6>
+    </div>
+    <div class="card-body offering-body">
+        <p class="card-text">{{ offering.description }}</p>
+        <p class="card-text price-tag">Price: ${{ offering.price }}</p>
+        <p class="card-text">Host: {{ offering.host_user }}</p>
+        <p class="card-text">Available from {{ offering.availability_start_date }} to {{ offering.availability_end_date }}</p>
+    </div>
+    <div class="card-footer offering-footer">
+        <a href="#" class="btn btn-primary">Book Now</a>
+    </div>
+</div>
+
+{#    comment HTML with expand and comment how much time ago#}
+    <div id="comments">
+    {% for comment in comments %}
+        <div class="comment">
+            <strong>{{ comment.user.username }}</strong> - <span title="{{ comment.created_at }}">{{ comment.created_at|timesince }} ago</span>
+            {% if comment.text|length > 300 %}
+                <div class="truncated-comment">
+                    <p>{{ comment.text|slice:":300" }}</p>
+                    <a href="#" class="read-more">Read more</a>
+                </div>
+                <div class="full-comment">
+                    <p>{{ comment.text }}</p>
+                    <a href="#" class="read-less">Read less</a>
+                </div>
+            {% else %}
+                <p>{{ comment.text }}</p>
+            {% endif %}
+            <div class="comment-footer">
+            <span class="comment-date">{{ comment.created_at }}</span>
+            <span class="comment-user">{{ comment.user.username }}</span>
+                
+                <a href="{% url 'like_comment' comment.id %}" class="comment-like">Like</a>
+            <span>{{ comment.like_set.count }} Likes</span>
+            <a href="#replyForm{{ comment.id }}" class="comment-reply">Reply</a>
+        </div>
+        </div>
+    {% endfor %}
+</div>
+    
+{#    script is for expanding and collapsing comments #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.read-more').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var truncatedComment = this.parentElement;
+                truncatedComment.style.display = 'none';
+                var fullComment = truncatedComment.nextElementSibling;
+                fullComment.style.display = 'block';
+            });
+        });
+
+        document.querySelectorAll('.read-less').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var fullComment = this.parentElement;
+                fullComment.style.display = 'none';
+                var truncatedComment = fullComment.previousElementSibling;
+                truncatedComment.style.display = 'block';
+            });
+        });
+    });
+</script>
+    
+{% endblock %}

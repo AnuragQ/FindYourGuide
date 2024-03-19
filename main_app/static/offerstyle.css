@@ -2,13 +2,13 @@
     display: flex;
     justify-content: space-between;
 }
-
 .filter-pane {
-    width: 30%; /* Adjust width as needed */
+    width: 30% ;
 }
 .results-pane {
-    width: 60%; /* Adjust width as needed */
+    width: 60% ;
 }
 p {
     color: red;
 }
+
