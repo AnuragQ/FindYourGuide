@@ -26,36 +26,36 @@
                         <p>Travel Destinations: Paris, Tokyo, Bali</p>
                         <p>Goals: To travel to every continent</p>
                         <div class="post-tags">
-                            <div class="block-tag">
-                                <ul class="list-unstyled d-flex">
-                                    <li>
-                                        <a href="{%  url 'editprofile' %}" class="btn btn-dark btn-small btn-rounded">Edit Profile</a>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">Services Offered</button>
-                                        <section id="services-offered" class="services-list hidden">
-                                            <h4>Services Offered</h4>
-                                            <ul>
-                                                <!-- Services offered content here -->
-                                                <li>City Tour Guide</li>
-                                                <li>Adventure Trekking</li>
-                                            </ul>
-                                        </section>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-taken')">Services Taken</button>
-                                        <section id="services-taken" class="services-list hidden">
-                                            <h4>Services Taken</h4>
-                                            <ul>
-                                                <!-- Services taken content here -->
-                                                <li>Historical Tour</li>
-                                                <li>Cooking Class</li>
-                                            </ul>
-                                        </section>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div class="block-tag">
+                            <ul class="list-unstyled d-flex">
+                                <!-- Buttons for toggling services offered and services taken -->
+                                <li>
+                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">Services Offered</button>
+                                    <section id="services-offered" class="services-list hidden">
+                                        <h4>Services Offered</h4>
+                                        <ul>
+                                            <!-- Dynamic content for services offered -->
+                                            {% for service in services_offered %}
+                                                <li>{{ service.title }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </section>
+                                </li>
+                                <li>
+                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-taken')">Services Taken</button>
+                                    <section id="services-taken" class="services-list hidden">
+                                        <h4>Services Taken</h4>
+                                        <ul>
+                                            <!-- Dynamic content for services taken -->
+                                            {% for service in services_taken %}
+                                                <li>{{ service.offering.title }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </section>
+                                </li>
+                            </ul>
                         </div>
+                    </div>
                         <div class="social-links d-flex margin-small">
                             <div class="element-title">Share:</div>
                             <ul class="d-flex list-unstyled">

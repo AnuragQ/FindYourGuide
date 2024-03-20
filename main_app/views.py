@@ -9,6 +9,7 @@ from .models import Offering, Booking
 from django.db.models import Q
 
 
+
 def index(request):
     q = request.GET.get(
         'search_query') if request.GET.get('search_query') != None else ''
@@ -47,10 +48,24 @@ def logout_view(request):
     logout(request)
     return redirect('index')  # Redirect to the homepage after logout
 
+#def profile(request):
+ #   return render(request, 'main_app/profile.html')
+
 def profile(request):
-    return render(request, 'main_app/profile.html')
+    # Retrieve the services offered and services taken for the current user
+    services_offered = Offering.objects.filter(host_user=request.user)
+    services_taken = Booking.objects.filter(guest_user=request.user)
+
+    # Pass the data to the template context
+    context = {
+        'services_offered': services_offered,
+        'services_taken': services_taken,
+    }
+
+    return render(request, 'main_app/profile.html', context)
 
 
 def editprofile(request):
     return render(request, 'main_app/editprofile.html')
+
 
