@@ -5,7 +5,7 @@ from .models import Offering, User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import CustomSignUpForm, OfferingForm
+from .forms import CustomSignUpForm, OfferingForm, EditProfileForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
 from django.db.models import Q
@@ -174,8 +174,18 @@ def profile(request):
     return render(request, 'main_app/profile.html', context)
 
 
+#def editprofile(request):
+ #   return render(request, 'main_app/editprofile.html')
+
 def editprofile(request):
-    return render(request, 'main_app/editprofile.html')
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page after successful edit
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'main_app/editprofile.html', {'form': form})
 
 
 def addoffering(request):

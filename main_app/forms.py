@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Booking, Offering
 from django.forms import ModelForm
 
@@ -40,3 +40,8 @@ class OfferingForm(forms.ModelForm):
             'availability_start_date': forms.DateInput(attrs={'type': 'date'}),
             'availability_end_date': forms.DateInput(attrs={'type': 'date'})
         }
+
+class EditProfileForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
