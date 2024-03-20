@@ -9,7 +9,12 @@ class User(AbstractUser):
     username = models.CharField(max_length=200, null=True, unique=True)
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
-
+    location = models.CharField(max_length=100, null=True)
+    occupation = models.CharField(max_length=100, null=True)
+    hobbies = models.TextField(null=True)
+    languages = models.TextField(null=True)
+    travel_destinations = models.TextField(null=True)
+    goals = models.TextField(null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
 
     REQUIRED_FIELDS = []

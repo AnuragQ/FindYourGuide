@@ -44,4 +44,4 @@ class OfferingForm(forms.ModelForm):
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ('email', 'bio', 'avatar')
+        fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
