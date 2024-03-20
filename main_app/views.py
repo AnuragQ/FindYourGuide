@@ -159,8 +159,19 @@ def cancel_booking(request, booking_id):
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
 
+#def profile(request):
+#    return render(request, 'main_app/profile.html')
+
 def profile(request):
-    return render(request, 'main_app/profile.html')
+    # Fetch data for services offered and services taken
+    services_offered = Offering.objects.filter(host_user=request.user)
+    services_taken = Booking.objects.filter(guest_user=request.user)
+
+    context = {
+        'services_offered': services_offered,
+        'services_taken': services_taken
+    }
+    return render(request, 'main_app/profile.html', context)
 
 
 def editprofile(request):
