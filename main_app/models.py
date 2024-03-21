@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
+
+
 # Create your models here.
 #
 
@@ -20,6 +22,7 @@ class User(AbstractUser):
     travel_destinations = models.TextField(null=True)
     goals = models.TextField(null=True)
 
+
 class Offering(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -28,26 +31,29 @@ class Offering(models.Model):
         User, on_delete=models.CASCADE, related_name='offerings', default=None)
     availability_start_date = models.DateField(default=None)
     availability_end_date = models.DateField(default=None)
-    #type of enum
+    # type of enum
     OFFERING_TYPE_CHOICES = [
         ('accomodation', 'Accomodation'),
         ('sight-seeing', 'Sight-seeing'),
         ('food-tour', 'Food-tour'),
     ]
-    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES,default='accomodation')
+    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES, default='accomodation')
     offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
     offering_time = models.TimeField(null=True, blank=True)
+
 
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 
+
 class Comment(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Booking(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='bookings')

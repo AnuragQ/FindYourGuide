@@ -14,10 +14,16 @@
       <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
 
       <!-- create button for payment -->
-      <a href="" class="btn btn-primary">Pay Now</a>
+        {% if user.is_authenticated %}
+         <button class="button btn btn-primary" type="button" id="submitBtn" data-booking-id="{{ booking.id }}">Pay Now</button>
+        {% endif %}
     </div>
   </div>
 </div>
 <br />
 
+    {% if user.is_authenticated %}
+     <script src="https://js.stripe.com/v3/"></script>
+     <script src="{% static 'payment.js' %}"></script>
+    {% endif %}
 {% endblock %}

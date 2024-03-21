@@ -77,7 +77,8 @@
       {% for rating in offering.ratings.all %}
         <li class="list-group-item">
           <span class="font-weight-bold">Rated </span> 
-          {% with rating.score|stars as rating_stars %}
+{#          {% with rating.score|stars as rating_stars %}#}
+               {% with rating.score as rating_stars %}
             {% for _ in rating_stars.full_stars %}
               <span class="fa fa-star"></span>
             {% endfor %}
