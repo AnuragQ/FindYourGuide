@@ -9,15 +9,16 @@ class User(AbstractUser):
     username = models.CharField(max_length=200, null=True, unique=True)
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
+
+    avatar = models.ImageField(null=True, default="avatar.svg")
+
+    REQUIRED_FIELDS = []
     location = models.CharField(max_length=100, null=True)
     occupation = models.CharField(max_length=100, null=True)
     hobbies = models.TextField(null=True)
     languages = models.TextField(null=True)
     travel_destinations = models.TextField(null=True)
     goals = models.TextField(null=True)
-    avatar = models.ImageField(null=True, default="avatar.svg")
-
-    REQUIRED_FIELDS = []
 
 class Offering(models.Model):
     title = models.CharField(max_length=200)
@@ -36,7 +37,6 @@ class Offering(models.Model):
     offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES,default='accomodation')
     offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
     offering_time = models.TimeField(null=True, blank=True)
-    offering_description = models.TextField(null=True, blank=True)
 
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
@@ -58,4 +58,11 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     no_of_guests = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
-    
+    STATUS = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    booking_status = models.CharField(
+        max_length=20, choices=STATUS, default='pending')

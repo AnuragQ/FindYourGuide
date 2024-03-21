@@ -1,6 +1,6 @@
 {% extends 'main_app/index.html' %} {% load static %} {%  block body_block  %}
 
-<div>
+<div class="container mt-5 Booking">
     <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_p }}

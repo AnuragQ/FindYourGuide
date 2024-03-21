@@ -138,12 +138,12 @@
 {#                        <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>#}
 {#                        #}
 {#                      </li>#}
-                    
-                    <li class="menu-item has-sub">
+                     {% if user.is_authenticated %}
+                      <li class="menu-item has-sub">
                         <a href="{%  url 'profile' %}" class="item-anchor d-flex align-item-center" data-effect="Blog">Profile<i class="icon icon-chevron-down"></i></a>
                       </li>
 
-                      {% if user.is_authenticated %}
+                     
                     <!-- If the user is authenticated, show the Logout button -->
                     <li><a href="{% url 'logout' %}" class="item-anchor" data-effect="Contact">Logout</a></li>
                 {% else %}
