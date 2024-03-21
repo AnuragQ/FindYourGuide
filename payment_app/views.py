@@ -10,12 +10,14 @@ from django.views.generic.base import TemplateView
 from main_app.models import Booking
 from payment_app.models import Product
 from .models import Payment
+from django.db.models import Q
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def payments_view(request):
-    payments = Payment.objects.all()  # Payment.objects.filter(payer=user_id)
+    payments = Payment.objects.filter(payer=request.user)
+    # payments = Payment.objects.filter(Q(payer=request.user) | Q(booking__offering__host_user=request.user))
     return render(request, 'payment_app/payments.html', {'payments': payments})
 
 
@@ -67,7 +69,8 @@ def get_stripe_payment_info(request, session_id):
     except stripe.error.InvalidRequestError:
         return JsonResponse({'error': 'Invalid Session ID'}, status=400)
 
-#Not used
+
+# Not used
 @csrf_exempt
 def create_checkout_session_post(request):
     if request.method == 'POST':
