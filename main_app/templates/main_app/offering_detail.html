@@ -1,12 +1,10 @@
-{#{% extends 'main_app/base.html' %}#}
 {% extends 'main_app/index.html' %} 
-{% load stars %}
 {% load static %}
 
 {% block head_block %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 {% endblock %}
-{#{% block content %}#}
+
 {% block body_block %}
 
 {#If you want all users to view the offerings, but only authenticated users who are also the host user to edit or delete the form, you can use conditional logic in your template to show the edit and delete options only to authenticated users who are the host of the offering.#}
@@ -22,12 +20,12 @@
     <p><strong>Host User:</strong> {{ offering.host_user }}</p>
     <p><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
     <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
-    <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
+    <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
     {% if offering.offering_image %}
         <img src="{{ offering.offering_image.url }}" alt="Offering Image">
     {% endif %}
     <p><strong>Time:</strong> {{ offering.offering_time }}</p>
-    <p><strong>Description:</strong> {{ offering.offering_description }}</p>
+    
 
 {#     <div class="mt-4">#}
       <div>
@@ -79,7 +77,8 @@
       {% for rating in offering.ratings.all %}
         <li class="list-group-item">
           <span class="font-weight-bold">Rated </span> 
-          {% with rating.score|stars as rating_stars %}
+{#          {% with rating.score|stars as rating_stars %}#}
+               {% with rating.score as rating_stars %}
             {% for _ in rating_stars.full_stars %}
               <span class="fa fa-star"></span>
             {% endfor %}

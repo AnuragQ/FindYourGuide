@@ -138,8 +138,9 @@ def create_booking(request, offering_id):
             booking = form.save(commit=False)
             booking.offering = offering
             booking.guest_user = request.user
+            booking.status = 'pending'
             booking.save()
-            return redirect('index')
+            return redirect('booking_detail', pk=booking.id)
     context = {'form': form}
 
     # return redirect('index')
@@ -151,14 +152,23 @@ def cancel_booking(request, booking_id):
     print(booking)
     # Ensure that only the user who made the booking can cancel it
     if request.user == booking.guest_user:
-        booking.delete()
+        # chenge the status of the booking to cancelled
+        booking.booking_status = 'cancelled'
+        booking.save()
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
+def booking_detail(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    # if booking exists, fetch the offering
+    offering = None
+    if booking:
+        offering=Offering.objects.get(id=booking.offering.id)
 
+    return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
 #def profile(request):
 #    return render(request, 'main_app/profile.html')
 
