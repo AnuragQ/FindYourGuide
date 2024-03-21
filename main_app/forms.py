@@ -34,7 +34,7 @@ class OfferingForm(forms.ModelForm):
     class Meta:
         model = Offering
         fields = ['title', 'description', 'price', 'host_user', 'availability_start_date', 'availability_end_date',
-                  'offering_type', 'offering_image', 'offering_time'
+                  'offering_type', 'offering_image', 'offering_time', 'offering_description'
                   ]
         widgets = {
             'availability_start_date': forms.DateInput(attrs={'type': 'date'}),

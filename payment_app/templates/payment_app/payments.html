@@ -1,6 +1,6 @@
 {% extends 'main_app/index.html' %} {% block body_block %}
 <div class="container">
-  <h2 class="title">My Payments</h2>
+  <h1 class="title">Payments</h1>
   <table id="payments-table" class="display">
     <thead>
       <tr>
@@ -8,29 +8,29 @@
         <th>Currency</th>
         <th>Paid At</th>
         <th>Payer</th>
-        <th>Booking</th>
+        <th>Product</th>
       </tr>
     </thead>
     <tbody>
       {% for payment in payments %}
       <tr class="center-text">
-        <td>{{ payment.amount | floatformat:2 }}</td>
-        <td>{{ payment.currency | upper }}</td>
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.currency }}</td>
         <td>{{ payment.paid_at }}</td>
         <td>{{ payment.payer }}</td>
         <td class="center-text" style="text-align: center">
           <div
             style="display: flex; align-items: center; justify-content: center"
           >
-            {% if payment.booking.offering.offering_image %}
+            {% if payment.product.image %}
             <img
-              src="{{ payment.booking.offering.offering_image.url }}"
-              alt="{{ payment.booking.offering.title }}"
+              src="{{ payment.product.image.url }}"
+              alt="{{ payment.product.name }}"
               width="50"
               style="margin-right: 10px"
             />
             {% endif %}
-            <span>{{ payment.booking.offering.title }}</span>
+            <span>{{ payment.product.name }}</span>
           </div>
         </td>
       </tr>

@@ -10,15 +10,13 @@ fetch("/payment/config/")
   document.querySelector("#submitBtn").addEventListener("click", () => {
     // Get Checkout Session ID
     console.log("Submitted Go to Payment")
-    const booking_id = document.querySelector("#submitBtn").getAttribute("data-booking-id");
+    const product_id = document.querySelector("#submitBtn").getAttribute("data-product-id");
+    const quantity = document.getElementById("quantity").value;
 
-    fetch(`/payment/create-checkout-session?booking_id=${booking_id}`)
+    fetch(`/payment/create-checkout-session?product_id=${product_id}&quantity=${quantity}`)
     .then((result) => { return result.json(); })
     .then((data) => {
-      if(data.error){
-        alert(data.error);
-        return;
-      }
+      console.log(data);
       // Redirect to Stripe Checkout
       return stripe.redirectToCheckout({sessionId: data.sessionId})
     })
