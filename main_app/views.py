@@ -161,6 +161,9 @@ def cancel_booking(request, booking_id):
         # chenge the status of the booking to cancelled
         booking.booking_status = 'cancelled'
         booking.save()
+        print("Removing payment expiry session")
+        if 'payment_expiry' in request.session:
+            del request.session['payment_expiry']
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
