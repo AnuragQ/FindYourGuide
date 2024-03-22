@@ -1,0 +1,219 @@
+ body {
+    font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+p, li {
+    color: #666;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+
+.offering-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+    .reviews-section, .rating-section {
+        border-top: 2px solid #eee;
+        padding-top: 20px;
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+    .avg-rating-section {
+        margin-right: 20px;
+    }
+
+    .review-item {
+        list-style-type: none;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+    .rating-stars {
+        color: #FFD700;
+        display: inline;
+    }
+
+    .inactive-star {
+        color: #ddd;
+    }
+
+    /* Additional styles for layout and readability */
+    .container-k {
+        width: 80%;
+        margin: auto;
+    }
+
+    input[type="text"], select {
+        padding: 10px;
+        margin: 5px 0px;
+        display: block;
+        width: 100%;
+    }
+
+    /*.offering-image {*/
+    /*    !* Add your desired styles here *!*/
+    /*    width: 100px; !* Example width *!*/
+    /*    height: 100px; !* Example height *!*/
+    /*    border-radius: 50%; !* Make it round *!*/
+    /*    border: 2px solid #fff; !* Example border *!*/
+    /*    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); !* Example box shadow *!*/
+    /*}*/
+
+.offering-container {
+    display: flex; /* Use flexbox layout */
+    height: 100vh; /* Use 100% of the viewport height for demonstration */
+    align-items: center; /* Center items vertically */
+}
+
+.offering-image {
+    flex-grow: 1; /* Allow the image container to grow and fill available space */
+    display: flex;
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+}
+
+.offering-image img {
+    border-radius: 10%; /* Make the image circular */
+    max-width: 100%; /* Ensure the image doesn't exceed the container's width */
+    max-height: 80vh; /* Limit the image's height to maintain the aspect ratio and fit within the viewport */
+    object-fit: cover; /* Ensure the image covers the space without distorting */
+}
+
+.offering-details {
+    flex-basis: 50%; /* Initially size the details to take up 50% of the container */
+    padding: 20px; /* Add some padding around the details for spacing */
+    margin-right: 20px; /* Add margin to create space between the details and the image */
+}
+
+
+
+ /*one line form total comments and ratings*/
+ .ratings-comments-section {
+    display: flex;
+    align-items: center; /* Align items vertically */
+}
+
+
+
+
+.total-comments {
+    margin-right: 20px; /* Add some spacing between sections */
+}
+
+.order-form {
+    flex-grow: 1; /* Allow the order form to take up remaining space */
+}
+
+
+
+
+/*one line for order form*/
+
+ .inline-form {
+    display: flex;
+    align-items: center; /* Align items in the middle */
+}
+
+.form-field {
+    margin-right: 10px; /* Spacing between form fields and button */
+}
+
+/* Optional: Style to reduce form field width if necessary */
+.inline-form .form-field input,
+.inline-form .form-field select {
+    max-width: 200px; /* Adjust based on your form field size requirements */
+}
+
+
+.errorlist {
+    display: none;
+}
+/* Remove bullets and margins from error lists (Django error messages) */
+/*.errorlist {*/
+/*    list-style-type: none;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    color: red; !* Example color for errors *!*/
+/*    font-size: 0.75rem; !* Smaller font size for error messages *!*/
+/*}*/
+
+
+
+/*latest adddition */
+
+.section-container {
+    display: flex;
+    justify-content: space-between; /* Adjusted for better spacing */
+    align-items: center;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.ratings-comments {
+    display: flex;
+    align-items: center;
+}
+
+.rating-section, .total-comments {
+    margin-right: 20px; /* Add space between the ratings and comments */
+}
+
+.order-form .inline-form {
+    display: flex;
+    align-items: center;
+}
+
+.order-form .form-field {
+    margin-right: 10px; /* Space between form elements */
+    height: 40px; /* Standardize height */
+    padding: 0 10px; /* Padding for text inputs and selects */
+}
+
+.order-form button {
+    padding: 10px 20px; /* Button size */
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.order-form button:hover {
+    background-color: #0056b3;
+}
+
+
+  /*TO MAKE RATINGS DISPLAY ON NEXT LINE */
+.blocky {
+    display: block;
+}
+

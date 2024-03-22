@@ -25,4 +25,7 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('editprofile/', views.editprofile, name='editprofile'),
     path('addoffering/', views.addoffering, name='addoffering'),
+
+    # Offering Page
+    path('offeringpage/<int:pk>', views.offering_page, name='offering_page'),
 ]
