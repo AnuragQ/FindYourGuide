@@ -1,4 +1,5 @@
 {% extends 'main_app/index.html' %} 
+{% load static %}
 
 {% block body_block %}
     <main>
@@ -11,7 +12,14 @@
                     </div>
                     <h1 class="page-title">Exploring the world through my lens, one snapshot at a time.</h1>
                     <div class="feature-image">
+                    {{ user }}
+                    {{ user.avatar}}
+                    {{ user.avatar.url }}
+                        {% if user.avatar %}
                         <img src="{{ user.avatar.url }}" alt="Profile Picture">
+                        {% else %}
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLGouEEaAK7j0uWpnOp6o_ZwsSsMHIV0HIeQ&usqp=CAU" alt="Default Avatar">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -35,7 +43,7 @@
                                     <li>
                                         <a href="{%  url 'addoffering' %}" class="btn btn-dark btn-small btn-rounded">Add Offering</a>
                                     </li>
-                                                                    <li>
+                                    <li>
                                     <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">My Offerings</button>
                                     <section id="services-offered" class="services-list hidden">
                                         <h5>Services Offered</h5>
