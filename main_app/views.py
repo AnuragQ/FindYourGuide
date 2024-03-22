@@ -248,11 +248,9 @@ def offering_page(req,pk):
     if req.method == 'GET':
         form = ReviewForm()
     context ={'offering': offering,
-              'ratings': ratings,
               'reviews': reviews,
               'form': form,
               'avg_rating': avg_rating,
-              'comments': comments,
               'total_comments': total_comments,
               'review_order_form': review_order_form }
     return render(req,'main_app/offering_page.html',context)
