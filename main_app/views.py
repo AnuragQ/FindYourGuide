@@ -108,23 +108,23 @@ def offering_delete(request, pk):
         return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
 
 
-class SignUpView(CreateView):
-    form_class = CustomSignUpForm
-    # Redirect to homepage upon successful signup
-    success_url = reverse_lazy('index')
-    # Path to the template for sign up form
-    template_name = 'registration/signup.html'
-
-    def form_valid(self, form):
-        # Save the user and return the super class's form_valid method
-        response = super().form_valid(form)
-        # Additional actions after successful form submission, if any
-        return response
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('index')  # Redirect to the homepage after logout
+# class SignUpView(CreateView):
+#     form_class = CustomSignUpForm
+#     # Redirect to homepage upon successful signup
+#     success_url = reverse_lazy('index')
+#     # Path to the template for sign up form
+#     template_name = 'registration/signup.html'
+#
+#     def form_valid(self, form):
+#         # Save the user and return the super class's form_valid method
+#         response = super().form_valid(form)
+#         # Additional actions after successful form submission, if any
+#         return response
+#
+#
+# def logout_view(request):
+#     logout(request)
+#     return redirect('index')  # Redirect to the homepage after logout
 
 
 def create_booking(request, offering_id):
