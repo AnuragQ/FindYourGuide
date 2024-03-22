@@ -1,12 +1,11 @@
-{#{% extends 'main_app/base.html' %}#}
 {% extends 'main_app/index.html' %} 
-{#{% load stars %}#}
+
 {% load static %}
 
 {% block head_block %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 {% endblock %}
-{#{% block content %}#}
+
 {% block body_block %}
 
 {#If you want all users to view the offerings, but only authenticated users who are also the host user to edit or delete the form, you can use conditional logic in your template to show the edit and delete options only to authenticated users who are the host of the offering.#}
@@ -22,12 +21,12 @@
     <p><strong>Host User:</strong> {{ offering.host_user }}</p>
     <p><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
     <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
-    <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
+    <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
     {% if offering.offering_image %}
         <img src="{{ offering.offering_image.url }}" alt="Offering Image">
     {% endif %}
     <p><strong>Time:</strong> {{ offering.offering_time }}</p>
-    <p><strong>Description:</strong> {{ offering.offering_description }}</p>
+    
 
 {#     <div class="mt-4">#}
       <div>
@@ -79,53 +78,8 @@
     <!-- Display something else for non-authenticated users, like a login/register link -->
 {% endif %}
 </form>
-{#  <h2>Ratings</h2>#}
-{#  {% if offering.ratings.all %}#}
-{#    <ul class="list-group">#}
-{#      {% for rating in offering.ratings.all %}#}
-{#        <li class="list-group-item">#}
-{#          <span class="font-weight-bold">Rated </span> #}
-{#          {% with rating.score|stars as rating_stars %}#}
-{#            {% for _ in rating_stars.full_stars %}#}
-{#              <span class="fa fa-star"></span>#}
-{#            {% endfor %}#}
-{#            {% if rating_stars.half_star %}#}
-{#              <span class="fa fa-star-half"></span>#}
-{#            {% endif %}#}
-{#            {% for _ in rating_stars.empty_stars %}#}
-{#              <span class="fa fa-star-o"></span>#}
-{#            {% endfor %}#}
-{#          {% endwith %}#}
-{#          by {{ rating.user.username }}#}
-{#        </li>#}
-{#      {% endfor %}#}
-{#    </ul>#}
-{#  {% else %}#}
-{#    <p>No ratings yet.</p>#}
-{#  {% endif %}#}
-{#</div>#}
-{##}
-{#        <div class="mt-4">#}
-{#          <h2>Comments</h2>#}
-{#          {% if offering.comments.all %}#}
-{#            <div class="list-group">#}
-{#              {% for comment in offering.comments.all %}#}
-{#                <div class="list-group-item">#}
-{#                  <div class="d-flex w-100 justify-content-between">#}
-{#                    <h5 class="mb-1">{{ comment.user.username }}</h5>#}
-{#                    <small>{{ comment.created_at|date:"F d, Y h:i A" }}</small>#}
-{#                  </div>#}
-{#                  <p class="mb-1">{{ comment.text }}</p>#}
-{#                </div>#}
-{#              {% endfor %}#}
-{#            </div>#}
-{#          {% else %}#}
-{#            <p>No comments yet.</p>#}
-{#          {% endif %}#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
+
+
 {% endblock %}
 
 

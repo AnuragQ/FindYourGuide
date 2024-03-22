@@ -7,24 +7,25 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="post-meta">
-                        <span class="post-date">Feb 22, 2023</span> / <a href="blog.html" class="blog-categories">Fashion</a>
+                        <span class="post-date">Joined on {{ user.date_joined|date:"M d, Y" }}</span>
                     </div>
                     <h1 class="page-title">Exploring the world through my lens, one snapshot at a time.</h1>
                     <div class="feature-image">
-                        <img src="https://a.storyblok.com/f/191576/1200x800/faa88c639f/round_profil_picture_before_.webp" alt="Profile Picture">
+                        <img src="{{ user.avatar.url }}" alt="Profile Picture">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="post-content">
                         <h2>User Details</h2>
-                        <p>Name: John Doe</p>
-                        <p>Email: john@example.com</p>
-                        <p>Location: New York, USA</p>
-                        <p>Occupation: Photographer</p>
-                        <p>Hobbies: Photography, Hiking, Cooking</p>
-                        <p>Languages: English, Spanish</p>
-                        <p>Travel Destinations: Paris, Tokyo, Bali</p>
-                        <p>Goals: To travel to every continent</p>
+                        <p>Username: {{ user.username }}</p>
+                        <p>Email: {{ user.email }}</p>
+                        <p>Bio: {{ user.bio }}</p>
+                        <p>Location: {{ user.location }}</p>
+                        <p>Occupation: {{ user.occupation }}</p>
+                        <p>Hobbies: {{ user.hobbies }}</p>
+                        <p>Languages: {{ user.languages }}</p>
+                        <p>Travel Destinations: {{ user.travel_destinations }}</p>
+                        <p>Goals: {{ user.goals }}</p>
                         <div class="post-tags">
                             <div class="block-tag">
                                 <ul class="list-unstyled d-flex">
@@ -34,28 +35,30 @@
                                     <li>
                                         <a href="{%  url 'addoffering' %}" class="btn btn-dark btn-small btn-rounded">Add Offering</a>
                                     </li>
-                                    <li>
-                                        <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">Services Offered</button>
-                                        <section id="services-offered" class="services-list hidden">
-                                            <h4>Services Offered</h4>
-                                            <ul>
-                                                <!-- Services offered content here -->
-                                                <li>City Tour Guide</li>
-                                                <li>Adventure Trekking</li>
-                                            </ul>
-                                        </section>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-taken')">Services Taken</button>
-                                        <section id="services-taken" class="services-list hidden">
-                                            <h4>Services Taken</h4>
-                                            <ul>
-                                                <!-- Services taken content here -->
-                                                <li>Historical Tour</li>
-                                                <li>Cooking Class</li>
-                                            </ul>
-                                        </section>
-                                    </li>
+                                                                    <li>
+                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">My Offerings</button>
+                                    <section id="services-offered" class="services-list hidden">
+                                        <h5>Services Offered</h5>
+                                        <ul>
+                                            <!-- Dynamic content for services offered -->
+                                            {% for service in services_offered %}
+                                                <li><a href="{% url 'offering_detail' service.pk %}">{{ service.title }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </section>
+                                </li>
+                                <li>
+                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-taken')">My Bookings</button>
+                                    <section id="services-taken" class="services-list hidden">
+                                        <h5>Services Taken</h5>
+                                        <ul>
+                                            <!-- Dynamic content for services taken -->
+                                            {% for service in services_taken %}
+                                                <li>{{ service.offering.title }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </section>
+                                </li>
                                 </ul>
                             </div>
                         </div>

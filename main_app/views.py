@@ -5,7 +5,7 @@ from .models import Offering, User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import CustomSignUpForm, OfferingForm
+from .forms import CustomSignUpForm, OfferingForm, EditProfileForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
 from django.db.models import Q, Avg
@@ -142,8 +142,9 @@ def create_booking(request, offering_id):
             booking = form.save(commit=False)
             booking.offering = offering
             booking.guest_user = request.user
+            booking.status = 'pending'
             booking.save()
-            return redirect('index')
+            return redirect('booking_detail', pk=booking.id)
     context = {'form': form}
 
     # return redirect('index')
@@ -155,20 +156,50 @@ def cancel_booking(request, booking_id):
     print(booking)
     # Ensure that only the user who made the booking can cancel it
     if request.user == booking.guest_user:
-        booking.delete()
+        # chenge the status of the booking to cancelled
+        booking.booking_status = 'cancelled'
+        booking.save()
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
+def booking_detail(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    # if booking exists, fetch the offering
+    offering = None
+    if booking:
+        offering=Offering.objects.get(id=booking.offering.id)
+
+    return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
+#def profile(request):
+#    return render(request, 'main_app/profile.html')
 
 def profile(request):
-    return render(request, 'main_app/profile.html')
+    # Fetch data for services offered and services taken
+    services_offered = Offering.objects.filter(host_user=request.user)
+    services_taken = Booking.objects.filter(guest_user=request.user)
 
+    context = {
+        'services_offered': services_offered,
+        'services_taken': services_taken
+    }
+    return render(request, 'main_app/profile.html', context)
+
+
+#def editprofile(request):
+ #   return render(request, 'main_app/editprofile.html')
 
 def editprofile(request):
-    return render(request, 'main_app/editprofile.html')
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page after successful edit
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'main_app/editprofile.html', {'form': form})
 
 
 def addoffering(request):

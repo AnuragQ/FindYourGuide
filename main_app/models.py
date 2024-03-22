@@ -1,7 +1,11 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
+
 from django.core.exceptions import ValidationError
+
+
+
 
 # Create your models here.
 #
@@ -15,6 +19,13 @@ class User(AbstractUser):
     avatar = models.ImageField(null=True, default="avatar.svg")
 
     REQUIRED_FIELDS = []
+    location = models.CharField(max_length=100, null=True)
+    occupation = models.CharField(max_length=100, null=True)
+    hobbies = models.TextField(null=True)
+    languages = models.TextField(null=True)
+    travel_destinations = models.TextField(null=True)
+    goals = models.TextField(null=True)
+
 
 class Offering(models.Model):
     title = models.CharField(max_length=200)
@@ -24,15 +35,16 @@ class Offering(models.Model):
         User, on_delete=models.CASCADE, related_name='offerings', default=None)
     availability_start_date = models.DateField(default=None)
     availability_end_date = models.DateField(default=None)
-    #type of enum
+    # type of enum
     OFFERING_TYPE_CHOICES = [
         ('accomodation', 'Accomodation'),
         ('sight-seeing', 'Sight-seeing'),
         ('food-tour', 'Food-tour'),
     ]
-    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES,default='accomodation')
+    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES, default='accomodation')
     offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
     offering_time = models.TimeField(null=True, blank=True)
+
     offering_description = models.TextField(null=True, blank=True)
     def clean(self):
         if self.availability_start_date > self.availability_end_date:
@@ -42,6 +54,7 @@ class Offering(models.Model):
         super().save()
 
 
+
 class Rating(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -49,11 +62,13 @@ class Rating(models.Model):
     class Meta:
         constraints=[models.UniqueConstraint(fields=['offering', 'user'],name="unique_rating")]
 
+
 class Comment(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Review(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='reviews')
@@ -67,6 +82,7 @@ class Review(models.Model):
             models.UniqueConstraint(fields=['offering', 'user'], name="unique_review_for_offering_user")
         ]
 
+
 class Booking(models.Model):
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='bookings')
     guest_user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -76,4 +92,11 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     no_of_guests = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
-    
+    STATUS = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    booking_status = models.CharField(
+        max_length=20, choices=STATUS, default='pending')
