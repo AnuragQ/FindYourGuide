@@ -25,6 +25,14 @@
     {% if offering.offering_image %}
         <img src="{{ offering.offering_image.url }}" alt="Offering Image">
     {% endif %}
+{#      <form method="post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#    <table>#}
+{#        {{ form.offering_image.errors }}#}
+{#        {{ form.offering_image.label_tag }}#}
+{#        {{ form.offering_image }}#}
+{#    </table>#}
+{#</form>#}
     <p><strong>Time:</strong> {{ offering.offering_time }}</p>
     
 
@@ -33,13 +41,13 @@
     {% if request.user.is_authenticated and request.user == offering.host_user %}
      <div class="row">
     <div class="col">
-        <form action="{% url 'offering_edit' pk=offering.pk %}" method="get" class="edit-form">
+        <form action="{% url 'offering_edit' pk=offering.pk %}" method="get" class="edit-form" enctype="multipart/form-data">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Edit</button>
         </form>
     </div>
     <div class="col">
-        <form action="{% url 'offering_delete' pk=offering.pk %}" method="get" class="delete-form">
+        <form action="{% url 'offering_delete' pk=offering.pk %}" method="get" class="delete-form" enctype="multipart/form-data">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Delete</button>
         </form>

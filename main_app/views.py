@@ -93,38 +93,6 @@ def offering_detail(request, pk):
     response.set_cookie('recently_viewed_offerings', recently_viewed_offerings)
     return response
 
-# def offering_detail(request, pk):
-#     offering = get_object_or_404(Offering, pk=pk)
-#     user_bookings = []
-#
-#     # Check if the user is authenticated
-#     if request.user.is_authenticated:
-#         # Check if the current user is the host of the offering
-#         if offering.host_user == request.user:
-#             # Fetch all fields of the offering
-#             offering_fields = offering._meta.get_fields()
-#             # Populate user_bookings with the ids of bookings made by the current user
-#             for booking in Booking.objects.filter(guest_user=request.user):
-#                 user_bookings.append(booking.offering.id)
-#             # Instantiate the form with the offering object
-#             form = OfferingForm(instance=offering)
-#             # Check if the request is POST (form submission)
-#             if request.method == 'POST':
-#                 # Check if the form data is valid
-#                 form = OfferingForm(request.POST, request.FILES, instance=offering)
-#                 if form.is_valid():
-#                     form.save()
-#                     # messages.success(request, 'Offering updated successfully.')
-#                     return redirect('offering_detail', pk=pk)
-#             return render(request, 'main_app/offering_detail.html', {'form': form})
-#         else:
-#             # If the current user is not the host, display a message and redirect
-#             # messages.error(request, 'You are not authorized to edit this offering.')
-#             return redirect('offering_detail', pk=pk)
-#     else:
-#         # If the user is not authenticated, redirect to login page
-#         # messages.error(request, 'Please log in to edit this offering.')
-#         return redirect('login')
 
 
 @login_required
@@ -267,7 +235,7 @@ def editprofile(request):
 
 def addoffering(request):
     if request.method == 'POST':
-        form = OfferingForm(request.POST)
+        form = OfferingForm(request.POST, request.FILES)
         if form.is_valid():
             # Process the form data if valid
             form.save()
