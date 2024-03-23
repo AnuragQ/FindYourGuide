@@ -21,13 +21,27 @@
             <h2>User Details</h2>
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
-            <p>Bio: {{ user.bio }}</p>
-            <p>Location: {{ user.location }}</p>
-            <p>Occupation: {{ user.occupation }}</p>
-            <p>Hobbies: {{ user.hobbies }}</p>
-            <p>Languages: {{ user.languages }}</p>
-            <p>Travel Destinations: {{ user.travel_destinations }}</p>
-            <p>Goals: {{ user.goals }}</p>
+                                    {% if user.bio %}
+                        <p>Bio: {{ user.bio }}</p>
+                        {% endif %}
+                        {% if user.location %}
+                        <p>Location: {{ user.location }}</p>
+                        {% endif %}
+                        {% if user.occupation %}
+                        <p>Occupation: {{ user.occupation }}</p>
+                        {% endif %}
+                        {% if user.hobbies %}
+                        <p>Hobbies: {{ user.hobbies }}</p>
+                        {% endif %}
+                        {% if user.languages %}
+                        <p>Languages: {{ user.languages }}</p>
+                        {% endif %}
+                        {% if user.travel_destinations %}
+                        <p>Travel Destinations: {{ user.travel_destinations }}</p>
+                        {% endif %}
+                        {% if user.goals %}
+                        <p>Goals: {{ user.goals }}</p>
+                        {% endif %}
             <div class="post-tags">
               <div class="block-tag">
                 <ul class="list-unstyled d-flex">
@@ -108,131 +122,131 @@
   </div>
 
   <!-- Section 2 - Reply and Leave a comment-->
-  <section class="post-comment padding-large bg-light-grey">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="comments-wrap">
-            <h3>Comments</h3>
-            <div class="comment-list">
-              <article class="d-flex">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-                  alt="default"
-                  class="commentor-image"
-                />
-                <div class="author-post">
-                  <div class="comment-meta">
-                    <h4 class="meta-name">Rachel Ross</h4>
-                    <span class="meta-date">Aug 20,2022</span>
-                    <small class="comments-reply">
-                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>
-                    </small>
-                  </div>
-                  <p>
-                    Tristique tempis condimentum diam done ullancomroer sit
-                    element henddg sit he consequert.Tristique tempis
-                    condimentum diam done ullancomroer sit element henddg sit he
-                    consequert.
-                  </p>
-                </div>
-              </article>
-              <div class="child-comments">
-                <article class="d-flex">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-                    alt="sara"
-                    class="commentor-image"
-                  />
-                  <div class="author-post">
-                    <div class="comment-meta">
-                      <h4 class="meta-name">Jane Park</h4>
-                      <span class="meta-date">Sep 3,2022</span>
-                      <small class="comments-reply">
-                        <a href="#"> <i class="icon icon-reply"></i>Reply </a>
-                      </small>
-                    </div>
-                    <p>
-                      Lorem diam done ullancomroer sit element henddg sit he
-                      consequert.Tristique tempis condimentum diam done
-                      ullancomroer sit element henddg sit he consequert.
-                    </p>
-                  </div>
-                </article>
-              </div>
-              <article class="d-flex">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-                  alt="default"
-                  class="commentor-image"
-                />
-                <div class="author-post">
-                  <div class="comment-meta">
-                    <h4 class="meta-name">Rachel Ross</h4>
-                    <span class="meta-date">Aug 20,2023</span>
-                    <small class="comments-reply">
-                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>
-                    </small>
-                  </div>
-                  <p>
-                    Tristique tempis condimentum diam done ullancomroer sit
-                    element henddg sit he consequert.Tristique tempis
-                    condimentum diam done ullancomroer sit element henddg sit he
-                    consequert.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="comment-respond">
-            <h3>Leave a Comment</h3>
-            <form method="post" class="form-group">
-              <input
-                class="u-full-width"
-                type="text"
-                name="author"
-                id="author"
-                class="form-control"
-                placeholder="Your full name"
-              />
-              <input
-                class="u-full-width"
-                type="email"
-                name="email"
-                id="email"
-                class="form-control"
-                placeholder="E-mail Address"
-              />
-              <textarea
-                class="u-full-width"
-                id="comment"
-                class="form-control"
-                name="comment"
-                placeholder="Write your comment here"
-                rows="20"
-              ></textarea>
-              <label class="example-send-yourself-copy">
-                <input type="checkbox" />
-                <span class="label-body"
-                  >Save my name, email, and website in this browser for the next
-                  time I comment.</span
-                >
-              </label>
-              <button
-                type="submit"
-                name="submit"
-                class="btn btn-dark btn-medium"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+{#  <section class="post-comment padding-large bg-light-grey">#}
+{#    <div class="container">#}
+{#      <div class="row">#}
+{#        <div class="col-md-6">#}
+{#          <div class="comments-wrap">#}
+{#            <h3>Comments</h3>#}
+{#            <div class="comment-list">#}
+{#              <article class="d-flex">#}
+{#                <img#}
+{#                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#                  alt="default"#}
+{#                  class="commentor-image"#}
+{#                />#}
+{#                <div class="author-post">#}
+{#                  <div class="comment-meta">#}
+{#                    <h4 class="meta-name">Rachel Ross</h4>#}
+{#                    <span class="meta-date">Aug 20,2022</span>#}
+{#                    <small class="comments-reply">#}
+{#                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>#}
+{#                    </small>#}
+{#                  </div>#}
+{#                  <p>#}
+{#                    Tristique tempis condimentum diam done ullancomroer sit#}
+{#                    element henddg sit he consequert.Tristique tempis#}
+{#                    condimentum diam done ullancomroer sit element henddg sit he#}
+{#                    consequert.#}
+{#                  </p>#}
+{#                </div>#}
+{#              </article>#}
+{#              <div class="child-comments">#}
+{#                <article class="d-flex">#}
+{#                  <img#}
+{#                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#                    alt="sara"#}
+{#                    class="commentor-image"#}
+{#                  />#}
+{#                  <div class="author-post">#}
+{#                    <div class="comment-meta">#}
+{#                      <h4 class="meta-name">Jane Park</h4>#}
+{#                      <span class="meta-date">Sep 3,2022</span>#}
+{#                      <small class="comments-reply">#}
+{#                        <a href="#"> <i class="icon icon-reply"></i>Reply </a>#}
+{#                      </small>#}
+{#                    </div>#}
+{#                    <p>#}
+{#                      Lorem diam done ullancomroer sit element henddg sit he#}
+{#                      consequert.Tristique tempis condimentum diam done#}
+{#                      ullancomroer sit element henddg sit he consequert.#}
+{#                    </p>#}
+{#                  </div>#}
+{#                </article>#}
+{#              </div>#}
+{#              <article class="d-flex">#}
+{#                <img#}
+{#                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#                  alt="default"#}
+{#                  class="commentor-image"#}
+{#                />#}
+{#                <div class="author-post">#}
+{#                  <div class="comment-meta">#}
+{#                    <h4 class="meta-name">Rachel Ross</h4>#}
+{#                    <span class="meta-date">Aug 20,2023</span>#}
+{#                    <small class="comments-reply">#}
+{#                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>#}
+{#                    </small>#}
+{#                  </div>#}
+{#                  <p>#}
+{#                    Tristique tempis condimentum diam done ullancomroer sit#}
+{#                    element henddg sit he consequert.Tristique tempis#}
+{#                    condimentum diam done ullancomroer sit element henddg sit he#}
+{#                    consequert.#}
+{#                  </p>#}
+{#                </div>#}
+{#              </article>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-6">#}
+{#          <div class="comment-respond">#}
+{#            <h3>Leave a Comment</h3>#}
+{#            <form method="post" class="form-group">#}
+{#              <input#}
+{#                class="u-full-width"#}
+{#                type="text"#}
+{#                name="author"#}
+{#                id="author"#}
+{#                class="form-control"#}
+{#                placeholder="Your full name"#}
+{#              />#}
+{#              <input#}
+{#                class="u-full-width"#}
+{#                type="email"#}
+{#                name="email"#}
+{#                id="email"#}
+{#                class="form-control"#}
+{#                placeholder="E-mail Address"#}
+{#              />#}
+{#              <textarea#}
+{#                class="u-full-width"#}
+{#                id="comment"#}
+{#                class="form-control"#}
+{#                name="comment"#}
+{#                placeholder="Write your comment here"#}
+{#                rows="20"#}
+{#              ></textarea>#}
+{#              <label class="example-send-yourself-copy">#}
+{#                <input type="checkbox" />#}
+{#                <span class="label-body"#}
+{#                  >Save my name, email, and website in this browser for the next#}
+{#                  time I comment.</span#}
+{#                >#}
+{#              </label>#}
+{#              <button#}
+{#                type="submit"#}
+{#                name="submit"#}
+{#                class="btn btn-dark btn-medium"#}
+{#              >#}
+{#                Submit#}
+{#              </button>#}
+{#            </form>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </section>#}
 
   <!-- Section 3 - Related Blogs-->
   <section id="latest-blog" class="padding-large">
@@ -324,79 +338,79 @@
   </section>
 
   <!-- Section 4 - Connect with our customers-->
-  <section id="instagram" class="padding-large">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Follow our instagram</h2>
-      </div>
-      <p>
-        Our official Instagram account <a href="#">@ultras</a> or
-        <a href="#">#ultras_clothing</a>
-      </p>
-      <div class="row d-flex flex-wrap justify-content-between">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-          <figure class="zoom-effect">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
-              alt="instagram"
-              class="insta-image"
-            />
-            <i class="icon icon-instagram"></i>
-          </figure>
-        </div>
-      </div>
-    </div>
-  </section>
+{#  <section id="instagram" class="padding-large">#}
+{#    <div class="container">#}
+{#      <div class="section-header">#}
+{#        <h2 class="section-title">Follow our instagram</h2>#}
+{#      </div>#}
+{#      <p>#}
+{#        Our official Instagram account <a href="#">@ultras</a> or#}
+{#        <a href="#">#ultras_clothing</a>#}
+{#      </p>#}
+{#      <div class="row d-flex flex-wrap justify-content-between">#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#        <div class="col-lg-2 col-md-4 col-sm-6">#}
+{#          <figure class="zoom-effect">#}
+{#            <img#}
+{#              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"#}
+{#              alt="instagram"#}
+{#              class="insta-image"#}
+{#            />#}
+{#            <i class="icon icon-instagram"></i>#}
+{#          </figure>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </section>#}
 </main>
 
 <script>
