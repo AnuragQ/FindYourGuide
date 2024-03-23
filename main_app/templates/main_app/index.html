@@ -2,6 +2,14 @@
 {% load static %}
 <html >
   <head>
+    <link rel="canonical" href="https://https://demo.themesberg.com/landwind/" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#ffffff">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>Find Your Guide</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -164,6 +172,9 @@
         </nav>
       </div>
     </header>
+
+        <br><br>
+    {% include 'core/includes/message.html' %}
 
 <div>
     {% block body_block %}  {% endblock %}

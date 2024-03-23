@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'payment_app.apps.PaymentAppConfig',
     'adminlistings_app.apps.AdminListingsAppConfig',
     "product_app.apps.ProductAppConfig",
-    "main_app.apps.MainAppConfig"
+    "main_app.apps.MainAppConfig",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,19 @@ LOGIN_REDIRECT_URL = 'index'
 
 
 AUTH_USER_MODEL = 'main_app.User'
+
+LOGOUT_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    'core.custom_auth_backend.CustomAuthenticationBackend',
+]
+
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '419e3141845f4a'
+EMAIL_HOST_PASSWORD = 'c1aeee8f41005f'
+EMAIL_PORT = '2525'
+
+
+
+PASSWORD_RESET_TIMEOUT = 14400

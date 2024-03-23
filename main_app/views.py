@@ -1,6 +1,10 @@
+from datetime import timedelta, datetime
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+
 from .models import Offering, User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -16,6 +20,11 @@ from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
 from .models import Rating, Review
 
 
+from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .models import Rating, Review
+
+
+from django.contrib import messages
 
 def index(request):
     q = request.GET.get(
@@ -25,9 +34,21 @@ def index(request):
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
     )
+    recently_viewed_offerings = []
+    if 'recently_viewed_offerings' in request.COOKIES:
+        # Get the cookie value
+        recently_viewed_offerings_ids = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings_ids = recently_viewed_offerings_ids.split(
+            ',')
+        # Fetch the offerings with the ids in the list
+        recently_viewed_offerings = Offering.objects.filter(
+            id__in=recently_viewed_offerings_ids)
+
     # print(offerings)
     context = {
-        'offerings': offerings
+        'offerings': offerings,
+        'recently_viewed_offerings': recently_viewed_offerings
     }
     return render(request, 'main_app/homepage.html', context)
 
@@ -43,11 +64,34 @@ def offering_detail(request, pk):
         for booking in Booking.objects.filter(
                 guest_user=request.user):
             user_bookings.append(booking.offering.id)
-    # print(user_bookings)
-    form = OfferingForm(instance=offering)  # Instantiate the form with the offering object
-    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
-                                                             'offering_fields': offering_fields, 'form': form})
 
+    # set the cookie value
+    # Instantiate the form with the offering object
+    form = OfferingForm(instance=offering)
+    response = render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
+                                                                 'offering_fields': offering_fields, 'form': form})
+    # Check if the offering id is in the cookie
+    if 'recently_viewed_offerings' in request.COOKIES:
+        recently_viewed_offerings = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings = recently_viewed_offerings.split(',')
+        # Check if the offering id is already in the list
+        if str(pk) in recently_viewed_offerings:
+            # Remove the offering id from the list
+            recently_viewed_offerings.remove(str(pk))
+        # Add the offering id to the beginning of the list
+        recently_viewed_offerings.insert(0, str(pk))
+        # Keep the list length to 5
+        recently_viewed_offerings = recently_viewed_offerings[:5]
+        # Join the list into a string
+        recently_viewed_offerings = ','.join(recently_viewed_offerings)
+    else:
+        # If the cookie does not exist, set the cookie value to the offering id
+        recently_viewed_offerings = str(pk)
+
+    # Set the cookie value
+    response.set_cookie('recently_viewed_offerings', recently_viewed_offerings)
+    return response
 
 # def offering_detail(request, pk):
 #     offering = get_object_or_404(Offering, pk=pk)
@@ -82,6 +126,7 @@ def offering_detail(request, pk):
 #         # messages.error(request, 'Please log in to edit this offering.')
 #         return redirect('login')
 
+
 @login_required
 def offering_edit(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
@@ -96,7 +141,8 @@ def offering_edit(request, pk):
             form = OfferingForm(instance=offering)
         return render(request, 'main_app/editoffering.html', {'form': form})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
 @login_required
@@ -109,26 +155,27 @@ def offering_delete(request, pk):
             return redirect('homepage')  # Redirect after deletion
         return render(request, 'main_app/deleteoffering.html', {'offering': offering})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
-class SignUpView(CreateView):
-    form_class = CustomSignUpForm
-    # Redirect to homepage upon successful signup
-    success_url = reverse_lazy('index')
-    # Path to the template for sign up form
-    template_name = 'registration/signup.html'
-
-    def form_valid(self, form):
-        # Save the user and return the super class's form_valid method
-        response = super().form_valid(form)
-        # Additional actions after successful form submission, if any
-        return response
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('index')  # Redirect to the homepage after logout
+# class SignUpView(CreateView):
+#     form_class = CustomSignUpForm
+#     # Redirect to homepage upon successful signup
+#     success_url = reverse_lazy('index')
+#     # Path to the template for sign up form
+#     template_name = 'registration/signup.html'
+#
+#     def form_valid(self, form):
+#         # Save the user and return the super class's form_valid method
+#         response = super().form_valid(form)
+#         # Additional actions after successful form submission, if any
+#         return response
+#
+#
+# def logout_view(request):
+#     logout(request)
+#     return redirect('index')  # Redirect to the homepage after logout
 
 
 def create_booking(request, offering_id):
@@ -144,6 +191,7 @@ def create_booking(request, offering_id):
             booking.guest_user = request.user
             booking.status = 'pending'
             booking.save()
+
             return redirect('booking_detail', pk=booking.id)
     context = {'form': form}
 
@@ -159,22 +207,36 @@ def cancel_booking(request, booking_id):
         # chenge the status of the booking to cancelled
         booking.booking_status = 'cancelled'
         booking.save()
+        print("Removing payment expiry session")
+        if 'payment_expiry' in request.session:
+            del request.session['payment_expiry']
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
+
 def booking_detail(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     # if booking exists, fetch the offering
     offering = None
     if booking:
-        offering=Offering.objects.get(id=booking.offering.id)
+        offering = Offering.objects.get(id=booking.offering.id)
+
+
+    if booking.booking_status == 'pending':
+        payment_session_duration_in_seconds = 60
+        print(f"Creating payment session for booking {booking.id}, {payment_session_duration_in_seconds} seconds")
+        expiry_time = datetime.now() + timedelta(seconds=payment_session_duration_in_seconds)
+        request.session['payment_expiry'] = expiry_time.timestamp()  # or should it be an object with user id
 
     return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
-#def profile(request):
+
+
+# def profile(request):
 #    return render(request, 'main_app/profile.html')
+
 
 def profile(request):
     # Fetch data for services offered and services taken
@@ -188,15 +250,16 @@ def profile(request):
     return render(request, 'main_app/profile.html', context)
 
 
-#def editprofile(request):
- #   return render(request, 'main_app/editprofile.html')
+
 
 def editprofile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        form = EditProfileForm(
+            request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')  # Redirect to the profile page after successful edit
+            # Redirect to the profile page after successful edit
+            return redirect('profile')
     else:
         form = EditProfileForm(instance=request.user)
     return render(request, 'main_app/editprofile.html', {'form': form})
@@ -210,7 +273,10 @@ def addoffering(request):
             form.save()
             print('hello homepage inside save')
             # Redirect to a success page or homepage
-            return render(request, 'main_app/addoffering.html')
+            return render(request, 'main_app/homepage.html')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
     else:
         form = OfferingForm()
     return render(request, 'main_app/addoffering.html', {'form': form})
