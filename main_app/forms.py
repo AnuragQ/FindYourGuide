@@ -1,7 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Booking, Offering
+
+from django.contrib.auth.forms import UserCreationForm ,UserChangeForm
+from .models import User, Booking, Offering,Rating,Review
+
 from django.forms import ModelForm
+
 
 from main_app.models import Offering
 
@@ -19,6 +22,7 @@ class CustomSignUpForm(UserCreationForm):
 
 
 class BookingForm(ModelForm):
+
     class Meta:
         model = Booking
         fields = ['booking_start_date', 'booking_end_date', 'no_of_guests']
@@ -36,14 +40,48 @@ class OfferingForm(forms.ModelForm):
                   ]
         widgets = {
             'availability_start_date': forms.DateInput(attrs={'type': 'date'}),
-            'availability_end_date': forms.DateInput(attrs={'type': 'date'}),
-            # 'offering_image': forms.ImageField(label='Offering Image')  # Use FileField for image upload
+            'availability_end_date': forms.DateInput(attrs={'type': 'date'})
         }
-    # offering_image = forms.FileField(label='Offering Image')  # Use FileField for image upload
 
 
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model=Rating
+        fields = ['score']
+
+class CommentOrderingForm(forms.Form):
+    ORDER_CHOICES = (
+        ('latest', 'Latest'),
+        ('oldest', 'Oldest'),
+        ('highest_rating', 'Highest Rating'),
+        ('lowest_rating', 'Lowest Rating'),
+    )
+    order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
+
+class ReviewForm(forms.ModelForm):
+    SCORE_CHOICES = [
+        (1, '★'),
+        (2, '★★'),
+        (3, '★★★'),
+        (4, '★★★★'),
+        (5, '★★★★★'),
+    ]
+    score = forms.ChoiceField(choices=SCORE_CHOICES, widget=forms.Select(), label='Rating')
+    class Meta:
+        model = Review
+        fields = ['score', 'text']
+        labels = { 'text': 'Comment'}
+
+class ReviewOrderingForm(forms.Form):
+    ORDER_CHOICES = (
+        ('latest', 'Latest'),
+        ('oldest', 'Oldest'),
+        ('highest_rating', 'Highest Rating'),
+        ('lowest_rating', 'Lowest Rating'),
+    )
+    order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
-        fields = (
-        'email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+        fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+

@@ -1,4 +1,5 @@
 {% extends 'main_app/index.html' %} 
+
 {% load static %}
 
 {% block head_block %}
@@ -17,7 +18,7 @@
     <h2>{{ offering.title }}</h2>
     <p  class="display-4"><strong>Description:</strong> {{ offering.description }}</p>
     <p><strong>Price:</strong> {{ offering.price }}</p>
-    <p><strong>Host User:</strong> {{ offering.host_user }}</p>
+    <p><strong>Host User:</strong> <a href="{% url 'user_profile' offering.host_user.username %}">{{ offering.host_user.username }}</a></p>
     <p><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
     <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
     <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
@@ -51,6 +52,12 @@
             <button type="submit" class="btn btn-primary">Delete</button>
         </form>
     </div>
+     <div class="col">
+        <form action="{% url 'offering_page' pk=offering.pk %}" method="get" class="edit-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">View</button>
+        </form>
+    </div>
 </div>
         </div>
 
@@ -79,54 +86,8 @@
     <!-- Display something else for non-authenticated users, like a login/register link -->
 {% endif %}
 </form>
-  <h2>Ratings</h2>
-  {% if offering.ratings.all %}
-    <ul class="list-group">
-      {% for rating in offering.ratings.all %}
-        <li class="list-group-item">
-          <span class="font-weight-bold">Rated </span> 
-{#          {% with rating.score|stars as rating_stars %}#}
-               {% with rating.score as rating_stars %}
-            {% for _ in rating_stars.full_stars %}
-              <span class="fa fa-star"></span>
-            {% endfor %}
-            {% if rating_stars.half_star %}
-              <span class="fa fa-star-half"></span>
-            {% endif %}
-            {% for _ in rating_stars.empty_stars %}
-              <span class="fa fa-star-o"></span>
-            {% endfor %}
-          {% endwith %}
-          by {{ rating.user.username }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No ratings yet.</p>
-  {% endif %}
-</div>
 
-        <div class="mt-4">
-          <h2>Comments</h2>
-          {% if offering.comments.all %}
-            <div class="list-group">
-              {% for comment in offering.comments.all %}
-                <div class="list-group-item">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ comment.user.username }}</h5>
-                    <small>{{ comment.created_at|date:"F d, Y h:i A" }}</small>
-                  </div>
-                  <p class="mb-1">{{ comment.text }}</p>
-                </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <p>No comments yet.</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
+
 {% endblock %}
 
 

@@ -36,6 +36,7 @@
       href="{% static 'css/vendor.css' %}"
     />
 
+
     <link
     rel="stylesheet"
       type="text/css"
@@ -48,6 +49,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+      {% block css_head %}{% endblock %}
     <!-- script
     ================================================== -->
     <script src="{% static 'js/modernizr.js' %}"></script>
@@ -111,7 +113,7 @@
             <div class="row d-flex align-items-center">
               <div class="col-lg-2 col-md-2">
                 <div class="main-logo">
-                  <a href="index.html">
+                  <a href="/">
                     <img src="{% static 'images/main-logo.png' %}"
                     alt="logo">
                   </a>
@@ -129,24 +131,12 @@
                         
                       </li>
 
-                      
-{#                      <li class="menu-item has-sub">#}
-{#                          <a href="/products" class="item-anchor d-flex align-item-center" data-effect="Shop">Products<i class="icon icon-chevron-down"></i></a>#}
-{#                          #}
-{#                        </li>#}
-                        <li><a href="/payment"
-                          class="item-anchor" data-effect="About">Payments</a></li>
 
-{#                      <li class="menu-item has-sub">#}
-{#                        <a href="#" class="item-anchor d-flex align-item-center" data-effect="Pages">Pages<i class="icon icon-chevron-down"></i></a>#}
-{#                        #}
-{#                      </li>#}
-{##}
-{#                      <li class="menu-item has-sub">#}
-{#                        <a href="blog.html" class="item-anchor d-flex align-item-center" data-effect="Blog">Blog<i class="icon icon-chevron-down"></i></a>#}
-{#                        #}
-{#                      </li>#}
-                     {% if user.is_authenticated %}
+                      
+                      
+                      {% if user.is_authenticated %}
+                      <li><a href="/payment"
+                        class="item-anchor" data-effect="About">Payments</a></li>
                       <li class="menu-item has-sub">
                         <a href="{%  url 'profile' %}" class="item-anchor d-flex align-item-center" data-effect="Blog">Profile<i class="icon icon-chevron-down"></i></a>
                       </li>
