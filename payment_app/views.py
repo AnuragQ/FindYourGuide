@@ -43,6 +43,9 @@ def success_view(request):
             session_id=session_id
         )
         print(f"Payment {payment.id} created successfully")
+        booking.booking_status = 'confirmed'
+        booking.save()
+        print(f"Booking {booking_id} updated successfully")
     else:
         print("Payment already exists")
 

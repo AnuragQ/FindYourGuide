@@ -14,15 +14,41 @@
       <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
 
       <!-- create button for payment -->
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and booking.booking_status == 'pending' %}
          <button class="button btn btn-primary" type="button" id="submitBtn" data-booking-id="{{ booking.id }}">Pay Now</button>
+          <div id="countdown" class="text-danger"></div>
         {% endif %}
+        {% if user.is_authenticated and booking.booking_status == 'confirmed' %}
+            <button class="button btn btn-success" type="button">Confirmed</button>
+            {% endif %}
+        {% if user.is_authenticated and booking.booking_status == 'cancelled' %}
+            <button class="button btn btn-dark" type="button">Cancelled</button>
+            {% endif %}
     </div>
   </div>
 </div>
 <br />
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and booking.booking_status == 'pending' %}
+    <script>
+        function updateCountdown() {
+            const expiryTime = {{ request.session.payment_expiry|default_if_none:"0" }};
+            const currentTime = Math.floor(Date.now() / 1000);
+            const secondsRemaining =expiryTime - currentTime;
+
+            if (secondsRemaining <= 0) {
+                document.getElementById('countdown').innerHTML = "Payment expired!";
+                const bookingId = {{ booking.id }};
+                window.location.href= `/cancel_booking/${bookingId}`
+            } else {
+                document.getElementById('countdown').innerHTML = "Payment will expire in " + secondsRemaining + " seconds.";
+                setTimeout(updateCountdown, 1000); // Update every second
+            }
+        }
+
+        window.onload = updateCountdown;
+    </script>
+
      <script src="https://js.stripe.com/v3/"></script>
      <script src="{% static 'payment.js' %}"></script>
     {% endif %}

@@ -1,6 +1,10 @@
+from datetime import timedelta, datetime
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+
 from .models import Offering, User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -12,6 +16,7 @@ from django.db.models import Q
 from .models import Booking
 from .forms import BookingForm
 
+from django.contrib import messages
 
 def index(request):
     q = request.GET.get(
@@ -178,6 +183,7 @@ def create_booking(request, offering_id):
             booking.guest_user = request.user
             booking.status = 'pending'
             booking.save()
+
             return redirect('booking_detail', pk=booking.id)
     context = {'form': form}
 
@@ -193,6 +199,9 @@ def cancel_booking(request, booking_id):
         # chenge the status of the booking to cancelled
         booking.booking_status = 'cancelled'
         booking.save()
+        print("Removing payment expiry session")
+        if 'payment_expiry' in request.session:
+            del request.session['payment_expiry']
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
@@ -207,7 +216,16 @@ def booking_detail(request, pk):
     if booking:
         offering = Offering.objects.get(id=booking.offering.id)
 
+
+    if booking.booking_status == 'pending':
+        payment_session_duration_in_seconds = 60
+        print(f"Creating payment session for booking {booking.id}, {payment_session_duration_in_seconds} seconds")
+        expiry_time = datetime.now() + timedelta(seconds=payment_session_duration_in_seconds)
+        request.session['payment_expiry'] = expiry_time.timestamp()  # or should it be an object with user id
+
     return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
+
+
 # def profile(request):
 #    return render(request, 'main_app/profile.html')
 
@@ -224,8 +242,7 @@ def profile(request):
     return render(request, 'main_app/profile.html', context)
 
 
-# def editprofile(request):
- #   return render(request, 'main_app/editprofile.html')
+
 
 def editprofile(request):
     if request.method == 'POST':
@@ -249,7 +266,10 @@ def addoffering(request):
             print('hello homepage inside save')
 
             # Redirect to a success page or homepage
-            return render(request, 'main_app/addoffering.html')
+            return render(request, 'main_app/homepage.html')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
     else:
         form = OfferingForm()
 
