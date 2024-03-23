@@ -1,6 +1,10 @@
+from datetime import timedelta, datetime
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+
 from .models import Offering, User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -8,10 +12,19 @@ from django.views.generic import CreateView
 from .forms import CustomSignUpForm, OfferingForm, EditProfileForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
-from django.db.models import Q
+from django.db.models import Q, Avg
 from .models import Booking
 from .forms import BookingForm
 
+from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .models import Rating, Review
+
+
+from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .models import Rating, Review
+
+
+from django.contrib import messages
 
 def index(request):
     q = request.GET.get(
@@ -21,9 +34,21 @@ def index(request):
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
     )
+    recently_viewed_offerings = []
+    if 'recently_viewed_offerings' in request.COOKIES:
+        # Get the cookie value
+        recently_viewed_offerings_ids = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings_ids = recently_viewed_offerings_ids.split(
+            ',')
+        # Fetch the offerings with the ids in the list
+        recently_viewed_offerings = Offering.objects.filter(
+            id__in=recently_viewed_offerings_ids)
+
     # print(offerings)
     context = {
-        'offerings': offerings
+        'offerings': offerings,
+        'recently_viewed_offerings': recently_viewed_offerings
     }
     return render(request, 'main_app/homepage.html', context)
 
@@ -39,10 +64,34 @@ def offering_detail(request, pk):
         for booking in Booking.objects.filter(
                 guest_user=request.user):
             user_bookings.append(booking.offering.id)
-    # print(user_bookings)
-    form = OfferingForm(instance=offering)  # Instantiate the form with the offering object
-    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
-                                                             'offering_fields': offering_fields, 'form': form})
+
+    # set the cookie value
+    # Instantiate the form with the offering object
+    form = OfferingForm(instance=offering)
+    response = render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
+                                                                 'offering_fields': offering_fields, 'form': form})
+    # Check if the offering id is in the cookie
+    if 'recently_viewed_offerings' in request.COOKIES:
+        recently_viewed_offerings = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings = recently_viewed_offerings.split(',')
+        # Check if the offering id is already in the list
+        if str(pk) in recently_viewed_offerings:
+            # Remove the offering id from the list
+            recently_viewed_offerings.remove(str(pk))
+        # Add the offering id to the beginning of the list
+        recently_viewed_offerings.insert(0, str(pk))
+        # Keep the list length to 5
+        recently_viewed_offerings = recently_viewed_offerings[:5]
+        # Join the list into a string
+        recently_viewed_offerings = ','.join(recently_viewed_offerings)
+    else:
+        # If the cookie does not exist, set the cookie value to the offering id
+        recently_viewed_offerings = str(pk)
+
+    # Set the cookie value
+    response.set_cookie('recently_viewed_offerings', recently_viewed_offerings)
+    return response
 
 
 
@@ -60,7 +109,8 @@ def offering_edit(request, pk):
             form = OfferingForm(instance=offering)
         return render(request, 'main_app/editoffering.html', {'form': form})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
 @login_required
@@ -73,7 +123,8 @@ def offering_delete(request, pk):
             return redirect('homepage')  # Redirect after deletion
         return render(request, 'main_app/deleteoffering.html', {'offering': offering})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
 # class SignUpView(CreateView):
@@ -108,6 +159,7 @@ def create_booking(request, offering_id):
             booking.guest_user = request.user
             booking.status = 'pending'
             booking.save()
+
             return redirect('booking_detail', pk=booking.id)
     context = {'form': form}
 
@@ -123,22 +175,36 @@ def cancel_booking(request, booking_id):
         # chenge the status of the booking to cancelled
         booking.booking_status = 'cancelled'
         booking.save()
+        print("Removing payment expiry session")
+        if 'payment_expiry' in request.session:
+            del request.session['payment_expiry']
         # Redirect to a booking list page or any other page
         return redirect('index')
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})
 
+
 def booking_detail(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
     # if booking exists, fetch the offering
     offering = None
     if booking:
-        offering=Offering.objects.get(id=booking.offering.id)
+        offering = Offering.objects.get(id=booking.offering.id)
+
+
+    if booking.booking_status == 'pending':
+        payment_session_duration_in_seconds = 60
+        print(f"Creating payment session for booking {booking.id}, {payment_session_duration_in_seconds} seconds")
+        expiry_time = datetime.now() + timedelta(seconds=payment_session_duration_in_seconds)
+        request.session['payment_expiry'] = expiry_time.timestamp()  # or should it be an object with user id
 
     return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
-#def profile(request):
+
+
+# def profile(request):
 #    return render(request, 'main_app/profile.html')
+
 
 def profile(request):
     # Fetch data for services offered and services taken
@@ -152,15 +218,16 @@ def profile(request):
     return render(request, 'main_app/profile.html', context)
 
 
-#def editprofile(request):
- #   return render(request, 'main_app/editprofile.html')
+
 
 def editprofile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        form = EditProfileForm(
+            request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')  # Redirect to the profile page after successful edit
+            # Redirect to the profile page after successful edit
+            return redirect('profile')
     else:
         form = EditProfileForm(instance=request.user)
     return render(request, 'main_app/editprofile.html', {'form': form})
@@ -173,10 +240,92 @@ def addoffering(request):
             # Process the form data if valid
             form.save()
             print('hello homepage inside save')
-
             # Redirect to a success page or homepage
-            return render(request, 'main_app/addoffering.html')
+            return render(request, 'main_app/homepage.html')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
     else:
         form = OfferingForm()
-
     return render(request, 'main_app/addoffering.html', {'form': form})
+
+def offering_page(req,pk):
+
+    offering = get_object_or_404(Offering, pk=pk)
+    reviews = offering.reviews.all()
+    ratings =offering.ratings.all()
+    comments = offering.comments.all()
+
+    # Average Rating
+
+    avg_rating_result = reviews.aggregate(avg_rating=Avg('score'))
+    if avg_rating_result['avg_rating'] == None:
+        avg_rating=0
+    else:
+        avg_rating = round(avg_rating_result['avg_rating'])
+
+
+
+
+
+
+    # avg_rating_result=ratings.aggregate(avg_rating=Avg('score'))
+    # avg_rating=round(avg_rating_result['avg_rating'])
+
+    #Total Comments
+    total_comments=reviews.count()
+
+    # total_comments= comments.count()
+
+    # Handle comment ordering form
+    review_order_form = ReviewOrderingForm(req.GET)
+    if review_order_form.is_valid():
+        order_by = review_order_form.cleaned_data.get('order_by')
+        if order_by == 'latest':
+            reviews = reviews.order_by('-created_at')
+        elif order_by == 'oldest':
+            reviews = reviews.order_by('created_at')
+        elif order_by == 'highest_rating':
+            reviews = reviews.order_by('-score')
+        elif order_by == 'lowest_rating':
+            reviews = reviews.order_by('score')
+
+
+    if req.method == 'POST':
+        # if user has already rated
+        form = ReviewForm(req.POST)
+        if form.is_valid():
+            # here user and offering attributes are used to get object if there is object
+            # default value attibutes like score are used to assign values to those attributes if cannot get that object
+            # Also get_or_created is not used to do any update
+            review,created=Review.objects.get_or_create(
+                user=req.user,
+                offering=offering,
+                defaults={'score': form.cleaned_data['score'],
+                          'text': form.cleaned_data['text']}
+            )
+            if not created:
+                review.score=form.cleaned_data['score']
+                review.text = form.cleaned_data['text']
+                review.save()
+            return redirect('offering_page', pk)
+
+    if req.method == 'GET':
+        form = ReviewForm()
+    context ={'offering': offering,
+              'reviews': reviews,
+              'form': form,
+              'avg_rating': avg_rating,
+              'total_comments': total_comments,
+              'review_order_form': review_order_form }
+    return render(req,'main_app/offering_page.html',context)
+
+
+
+
+def user_profile(request, username):
+    # Fetch the user object based on the username
+    user = get_object_or_404(User, username=username)
+    # Render the user profile template with the user object
+    return render(request, 'main_app/user_profile.html', {'profile_user': user})
+
