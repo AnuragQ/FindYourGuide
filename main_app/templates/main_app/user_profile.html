@@ -1,0 +1,13 @@
+{% extends 'main_app/index.html' %}
+
+{% block body_block %}
+<main>
+    <div class="container mt-5">
+        <h1>User Profile</h1>
+        <p>Username: {{ profile_user.username }}</p>
+        <p>Email: {{ profile_user.email }}</p>
+        {{profile_user.first_name }} {{ profile_user.last_name }}
+        <!-- Add other user profile fields as needed -->
+    </div>
+</main>
+{% endblock %}

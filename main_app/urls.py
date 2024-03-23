@@ -28,4 +28,8 @@ urlpatterns = [
 
     # Offering Page
     path('offeringpage/<int:pk>', views.offering_page, name='offering_page'),
+
+    path('user/<str:username>/', views.user_profile, name='user_profile'),
+
+
 ]

@@ -18,7 +18,7 @@
     <h2>{{ offering.title }}</h2>
     <p  class="display-4"><strong>Description:</strong> {{ offering.description }}</p>
     <p><strong>Price:</strong> {{ offering.price }}</p>
-    <p><strong>Host User:</strong> {{ offering.host_user }}</p>
+    <p><strong>Host User:</strong> <a href="{% url 'user_profile' offering.host_user.username %}">{{ offering.host_user.username }}</a></p>
     <p><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
     <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
     <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
