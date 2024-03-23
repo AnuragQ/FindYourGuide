@@ -45,7 +45,7 @@ class Offering(models.Model):
     offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
     offering_time = models.TimeField(null=True, blank=True)
 
-    offering_description = models.TextField(null=True, blank=True)
+    # offering_description = models.TextField(null=True, blank=True)
     def clean(self):
         if self.availability_start_date > self.availability_end_date:
             raise ValidationError("Availability end date cannot be before availability start date")
