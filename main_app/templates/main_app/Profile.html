@@ -1,296 +1,412 @@
-{% extends 'main_app/index.html' %} 
-
-{% block body_block %}
-    <main>
-    <div class="main-content d-flex flex-wrap padding-large">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="post-meta">
-                        <span class="post-date">Joined on {{ user.date_joined|date:"M d, Y" }}</span>
-                    </div>
-                    <h1 class="page-title">Exploring the world through my lens, one snapshot at a time.</h1>
-                    <div class="feature-image">
-                        <img src="{{ user.avatar.url }}" alt="Profile Picture">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="post-content">
-                        <h2>User Details</h2>
-                        <p>Username: {{ user.username }}</p>
-                        <p>Email: {{ user.email }}</p>
-                        <p>Bio: {{ user.bio }}</p>
-                        <p>Location: {{ user.location }}</p>
-                        <p>Occupation: {{ user.occupation }}</p>
-                        <p>Hobbies: {{ user.hobbies }}</p>
-                        <p>Languages: {{ user.languages }}</p>
-                        <p>Travel Destinations: {{ user.travel_destinations }}</p>
-                        <p>Goals: {{ user.goals }}</p>
-                        <div class="post-tags">
-                            <div class="block-tag">
-                                <ul class="list-unstyled d-flex">
-                                    <li>
-                                        <a href="{%  url 'editprofile' %}" class="btn btn-dark btn-small btn-rounded">Edit Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="{%  url 'addoffering' %}" class="btn btn-dark btn-small btn-rounded">Add Offering</a>
-                                    </li>
-                                                                    <li>
-                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-offered')">My Offerings</button>
-                                    <section id="services-offered" class="services-list hidden">
-                                        <h5>Services Offered</h5>
-                                        <ul>
-                                            <!-- Dynamic content for services offered -->
-                                            {% for service in services_offered %}
-                                                <li><a href="{% url 'offering_detail' service.pk %}">{{ service.title }}</a></li>
-                                            {% endfor %}
-                                        </ul>
-                                    </section>
-                                </li>
-                                <li>
-                                    <button class="btn btn-dark btn-small btn-rounded" onclick="toggleServices('services-taken')">My Bookings</button>
-                                    <section id="services-taken" class="services-list hidden">
-                                        <h5>Services Taken</h5>
-                                        <ul>
-                                            <!-- Dynamic content for services taken -->
-                                            {% for service in services_taken %}
-                                                <li>{{ service.offering.title }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </section>
-                                </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="social-links d-flex margin-small">
-                            <div class="element-title">Share:</div>
-                            <ul class="d-flex list-unstyled">
-                                <li>
-                                    <a href="#"><i class="icon icon-facebook"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="icon icon-twitter"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="icon icon-instagram"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="icon icon-youtube-play"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{% extends 'main_app/index.html' %} {% block body_block %}
+<main>
+  <div class="main-content d-flex flex-wrap">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="post-meta">
+            <span class="post-date"
+              >Joined on {{ user.date_joined|date:"M d, Y" }}</span
+            >
+          </div>
+          <h1 class="page-title">
+            Exploring the world through my lens, one snapshot at a time.
+          </h1>
+          <div class="feature-image">
+            <img src="{{ user.avatar.url }}" alt="Profile Picture" />
+          </div>
         </div>
-    </div>
-
-    
-    <!-- Section 2 - Reply and Leave a comment-->
-    <section class="post-comment padding-large bg-light-grey">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="comments-wrap">
-              <h3>Comments</h3>
-              <div class="comment-list">
-                <article class="d-flex">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="default" class="commentor-image">
-                  <div class="author-post">
-                    <div class="comment-meta">
-                      <h4 class="meta-name">Rachel Ross</h4>
-                      <span class="meta-date">Aug 20,2022</span>
-                      <small class="comments-reply">
-                        <a href="#">
-                          <i class="icon icon-reply"></i>Reply </a>
-                      </small>
-                    </div>
-                    <p>Tristique tempis condimentum diam done ullancomroer sit element henddg sit he consequert.Tristique tempis condimentum diam done ullancomroer sit element henddg sit he consequert.</p>
-                  </div>
-                </article>
-                <div class="child-comments">
-                  <article class="d-flex">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="sara" class="commentor-image">
-                    <div class="author-post">
-                      <div class="comment-meta">
-                        <h4 class="meta-name">Jane Park</h4>
-                        <span class="meta-date">Sep 3,2022</span>
-                        <small class="comments-reply">
-                          <a href="#">
-                            <i class="icon icon-reply"></i>Reply </a>
-                        </small>
-                      </div>
-                      <p>Lorem diam done ullancomroer sit element henddg sit he consequert.Tristique tempis condimentum diam done ullancomroer sit element henddg sit he consequert.</p>
-                    </div>
-                  </article>
-                </div>
-                <article class="d-flex">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="default" class="commentor-image">
-                  <div class="author-post">
-                    <div class="comment-meta">
-                      <h4 class="meta-name">Rachel Ross</h4>
-                      <span class="meta-date">Aug 20,2022</span>
-                      <small class="comments-reply">
-                        <a href="#">
-                          <i class="icon icon-reply"></i>Reply </a>
-                      </small>
-                    </div>
-                    <p>Tristique tempis condimentum diam done ullancomroer sit element henddg sit he consequert.Tristique tempis condimentum diam done ullancomroer sit element henddg sit he consequert.</p>
-                  </div>
-                </article>
+        <div class="col-md-6">
+          <div class="post-content">
+            <h2>User Details</h2>
+            <p>Username: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>Bio: {{ user.bio }}</p>
+            <p>Location: {{ user.location }}</p>
+            <p>Occupation: {{ user.occupation }}</p>
+            <p>Hobbies: {{ user.hobbies }}</p>
+            <p>Languages: {{ user.languages }}</p>
+            <p>Travel Destinations: {{ user.travel_destinations }}</p>
+            <p>Goals: {{ user.goals }}</p>
+            <div class="post-tags">
+              <div class="block-tag">
+                <ul class="list-unstyled d-flex">
+                  <li>
+                    <a
+                      href="{%  url 'editprofile' %}"
+                      class="btn btn-dark btn-small btn-rounded"
+                      >Edit Profile</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{%  url 'addoffering' %}"
+                      class="btn btn-dark btn-small btn-rounded"
+                      >Add Offering</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="btn btn-dark btn-small btn-rounded"
+                      onclick="toggleServices('services-offered')"
+                      >My Offerings</a
+                    >
+                    <section id="services-offered" class="services-list hidden">
+                      <h5>Services Offered</h5>
+                      <ul>
+                        <!-- Dynamic content for services offered -->
+                        {% for service in services_offered %}
+                        <li>
+                          <a href="{% url 'offering_detail' service.pk %}"
+                            >{{ service.title }}</a
+                          >
+                        </li>
+                        {% endfor %}
+                      </ul>
+                    </section>
+                  </li>
+                  <li>
+                    <a
+                      class="btn btn-dark btn-small btn-rounded"
+                      onclick="toggleServices('services-taken')"
+                      >My Bookings</a
+                    >
+                    <section id="services-taken" class="services-list hidden">
+                      <h5>Services Taken</h5>
+                      <ul>
+                        <!-- Dynamic content for services taken -->
+                        {% for service in services_taken %}
+                        <li>{{ service.offering.title }}</li>
+                        {% endfor %}
+                      </ul>
+                    </section>
+                  </li>
+                </ul>
               </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="comment-respond">
-              <h3>Leave a Comment</h3>
-              <form method="post" class="form-group">
-                <input class="u-full-width" type="text" name="author" id="author" class="form-control" placeholder="Your full name">
-                <input class="u-full-width" type="email" name="email" id="email" class="form-control" placeholder="E-mail Address">
-                <textarea class="u-full-width" id="comment" class="form-control" name="comment" placeholder="Write your comment here" rows="20"></textarea>
-                <label class="example-send-yourself-copy">
-                  <input type="checkbox">
-                  <span class="label-body">Save my name, email, and website in this browser for the next time I comment.</span>
-                </label>
-                <button type="submit" name="submit" class="btn btn-dark btn-medium">Submit</button>
-              </form>
+            <div class="social-links d-flex margin-small">
+              <div class="element-title">Share:</div>
+              <ul class="d-flex list-unstyled">
+                <li>
+                  <a href="#"><i class="icon icon-facebook"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="icon icon-twitter"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="icon icon-instagram"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="icon icon-youtube-play"></i></a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    
-    <!-- Section 3 - Related Blogs-->
-    <section id="latest-blog" class="padding-large">
-      <div class="container">
-        <div class="section-header d-flex flex-wrap align-items-center justify-content-between">
-          <h2 class="section-title">Related Posts</h2>
-          <div class="btn-wrap align-right">
-            <a href="#" class="d-flex align-items-center">Read All Articles <i class="icon icon icon-arrow-io"></i>
+    </div>
+  </div>
+
+  <!-- Section 2 - Reply and Leave a comment-->
+  <section class="post-comment padding-large bg-light-grey">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="comments-wrap">
+            <h3>Comments</h3>
+            <div class="comment-list">
+              <article class="d-flex">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+                  alt="default"
+                  class="commentor-image"
+                />
+                <div class="author-post">
+                  <div class="comment-meta">
+                    <h4 class="meta-name">Rachel Ross</h4>
+                    <span class="meta-date">Aug 20,2022</span>
+                    <small class="comments-reply">
+                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>
+                    </small>
+                  </div>
+                  <p>
+                    Tristique tempis condimentum diam done ullancomroer sit
+                    element henddg sit he consequert.Tristique tempis
+                    condimentum diam done ullancomroer sit element henddg sit he
+                    consequert.
+                  </p>
+                </div>
+              </article>
+              <div class="child-comments">
+                <article class="d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+                    alt="sara"
+                    class="commentor-image"
+                  />
+                  <div class="author-post">
+                    <div class="comment-meta">
+                      <h4 class="meta-name">Jane Park</h4>
+                      <span class="meta-date">Sep 3,2022</span>
+                      <small class="comments-reply">
+                        <a href="#"> <i class="icon icon-reply"></i>Reply </a>
+                      </small>
+                    </div>
+                    <p>
+                      Lorem diam done ullancomroer sit element henddg sit he
+                      consequert.Tristique tempis condimentum diam done
+                      ullancomroer sit element henddg sit he consequert.
+                    </p>
+                  </div>
+                </article>
+              </div>
+              <article class="d-flex">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+                  alt="default"
+                  class="commentor-image"
+                />
+                <div class="author-post">
+                  <div class="comment-meta">
+                    <h4 class="meta-name">Rachel Ross</h4>
+                    <span class="meta-date">Aug 20,2023</span>
+                    <small class="comments-reply">
+                      <a href="#"> <i class="icon icon-reply"></i>Reply </a>
+                    </small>
+                  </div>
+                  <p>
+                    Tristique tempis condimentum diam done ullancomroer sit
+                    element henddg sit he consequert.Tristique tempis
+                    condimentum diam done ullancomroer sit element henddg sit he
+                    consequert.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="comment-respond">
+            <h3>Leave a Comment</h3>
+            <form method="post" class="form-group">
+              <input
+                class="u-full-width"
+                type="text"
+                name="author"
+                id="author"
+                class="form-control"
+                placeholder="Your full name"
+              />
+              <input
+                class="u-full-width"
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                placeholder="E-mail Address"
+              />
+              <textarea
+                class="u-full-width"
+                id="comment"
+                class="form-control"
+                name="comment"
+                placeholder="Write your comment here"
+                rows="20"
+              ></textarea>
+              <label class="example-send-yourself-copy">
+                <input type="checkbox" />
+                <span class="label-body"
+                  >Save my name, email, and website in this browser for the next
+                  time I comment.</span
+                >
+              </label>
+              <button
+                type="submit"
+                name="submit"
+                class="btn btn-dark btn-medium"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3 - Related Blogs-->
+  <section id="latest-blog" class="padding-large">
+    <div class="container">
+      <div
+        class="section-header d-flex flex-wrap align-items-center justify-content-between"
+      >
+        <h2 class="section-title">Related Posts</h2>
+        <div class="btn-wrap align-right">
+          <a href="#" class="d-flex align-items-center"
+            >Read All Articles <i class="icon icon icon-arrow-io"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row d-flex flex-wrap">
+        <article class="col-md-4 post-item">
+          <div class="image-holder zoom-effect">
+            <a href="#">
+              <img
+                src="https://media.istockphoto.com/id/1191080960/photo/traditional-turkish-breakfast-and-people-taking-various-food-wide-composition.jpg?s=612x612&w=0&k=20&c=PP5ejMisEwzcLWrNmJ8iPPm_u-4P6rOWHEDpBPL2n7Q="
+                alt="post"
+                class="post-image"
+              />
             </a>
           </div>
-        </div>
-        <div class="row d-flex flex-wrap">
-          <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-              <a href="#">
-                <img src="https://media.istockphoto.com/id/1191080960/photo/traditional-turkish-breakfast-and-people-taking-various-food-wide-composition.jpg?s=612x612&w=0&k=20&c=PP5ejMisEwzcLWrNmJ8iPPm_u-4P6rOWHEDpBPL2n7Q=" alt="post" class="post-image">
-              </a>
+          <div class="post-content d-flex">
+            <div class="meta-date">
+              <div class="meta-day text-primary">22</div>
+              <div class="meta-month">Aug-2021</div>
             </div>
-            <div class="post-content d-flex">
-              <div class="meta-date">
-                <div class="meta-day text-primary">22</div>
-                <div class="meta-month">Aug-2021</div>
-              </div>
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="#">5 Must-Try Local Foods to Offer Your Windsor Visitors</a>
-                </h3>
-                <a href="blog.html" class="blog-categories">Local Food</a>
-              </div>
+            <div class="post-header">
+              <h3 class="post-title">
+                <a href="#"
+                  >5 Must-Try Local Foods to Offer Your Windsor Visitors</a
+                >
+              </h3>
+              <a href="blog.html" class="blog-categories">Local Food</a>
             </div>
-          </article>
-          <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-              <a href="#">
-                <img src="https://image.shutterstock.com/image-photo/epic-adventurous-extreme-sport-composite-260nw-1742451050.jpg" alt="post" class="post-image">
-              </a>
+          </div>
+        </article>
+        <article class="col-md-4 post-item">
+          <div class="image-holder zoom-effect">
+            <a href="#">
+              <img
+                src="https://image.shutterstock.com/image-photo/epic-adventurous-extreme-sport-composite-260nw-1742451050.jpg"
+                alt="post"
+                class="post-image"
+              />
+            </a>
+          </div>
+          <div class="post-content d-flex">
+            <div class="meta-date">
+              <div class="meta-day text-primary">25</div>
+              <div class="meta-month">Aug-2021</div>
             </div>
-            <div class="post-content d-flex">
-              <div class="meta-date">
-                <div class="meta-day text-primary">25</div>
-                <div class="meta-month">Aug-2021</div>
-              </div>
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="#">4 Hidden Gems for Vancouver Adventurers</a>
-                </h3>
-                <a href="blog.html" class="blog-categories">Adventures</a>
-              </div>
+            <div class="post-header">
+              <h3 class="post-title">
+                <a href="#">4 Hidden Gems for Vancouver Adventurers</a>
+              </h3>
+              <a href="blog.html" class="blog-categories">Adventures</a>
             </div>
-          </article>
-          <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-              <a href="#">
-                <img src="https://media.cnn.com/api/v1/images/stellar/prod/200713140421-11-resorts-private-planes-photos.jpg?q=w_1600,h_900,x_0,y_0,c_fill/h_618" alt="post" class="post-image">
-              </a>
+          </div>
+        </article>
+        <article class="col-md-4 post-item">
+          <div class="image-holder zoom-effect">
+            <a href="#">
+              <img
+                src="https://media.cnn.com/api/v1/images/stellar/prod/200713140421-11-resorts-private-planes-photos.jpg?q=w_1600,h_900,x_0,y_0,c_fill/h_618"
+                alt="post"
+                class="post-image"
+              />
+            </a>
+          </div>
+          <div class="post-content d-flex">
+            <div class="meta-date">
+              <div class="meta-day text-primary">28</div>
+              <div class="meta-month">Aug-2021</div>
             </div>
-            <div class="post-content d-flex">
-              <div class="meta-date">
-                <div class="meta-day text-primary">28</div>
-                <div class="meta-month">Aug-2021</div>
-              </div>
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="#">4 Quirky Stay Options for Travel Enthusiasts</a>
-                </h3>
-                <a href="blog.html" class="blog-categories">Places to Stay</a>
-              </div>
+            <div class="post-header">
+              <h3 class="post-title">
+                <a href="#">4 Quirky Stay Options for Travel Enthusiasts</a>
+              </h3>
+              <a href="blog.html" class="blog-categories">Places to Stay</a>
             </div>
-          </article>
-        </div>
+          </div>
+        </article>
       </div>
-    </section>
-    
-    <!-- Section 4 - Connect with our customers-->
-        <section id="instagram" class="padding-large">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Follow our instagram</h2>
-        </div>
-        <p>Our official Instagram account <a href="#">@ultras</a> or <a href="#">#ultras_clothing</a>
-        </p>
-        <div class="row d-flex flex-wrap justify-content-between">
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-            <figure class="zoom-effect">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU" alt="instagram" class="insta-image">
-              <i class="icon icon-instagram"></i>
-            </figure>
-          </div>
-        </div>          
-      </div>
-    </section>
-    
-    </main>
+    </div>
+  </section>
 
-  <script>
-    function toggleServices(activeSectionId) {
-      var serviceSections = document.querySelectorAll('.services-list');
-      serviceSections.forEach(function(section) {
-        section.classList.add('hidden');
-      });
-      var activeSection = document.getElementById(activeSectionId);
-      activeSection.classList.remove('hidden');
-    }
-  </script>
+  <!-- Section 4 - Connect with our customers-->
+  <section id="instagram" class="padding-large">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Follow our instagram</h2>
+      </div>
+      <p>
+        Our official Instagram account <a href="#">@ultras</a> or
+        <a href="#">#ultras_clothing</a>
+      </p>
+      <div class="row d-flex flex-wrap justify-content-between">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+          <figure class="zoom-effect">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaD2-zKSjwRW5xykCOTLDbV5aaJvkxlQShQ&usqp=CAU"
+              alt="instagram"
+              class="insta-image"
+            />
+            <i class="icon icon-instagram"></i>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  function toggleServices(activeSectionId) {
+    var serviceSections = document.querySelectorAll(".services-list");
+    serviceSections.forEach(function (section) {
+      section.classList.add("hidden");
+    });
+    var activeSection = document.getElementById(activeSectionId);
+    activeSection.classList.remove("hidden");
+  }
+</script>
 {% endblock %}
