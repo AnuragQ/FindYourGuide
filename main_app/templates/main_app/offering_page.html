@@ -31,7 +31,7 @@
         <p><strong>Availability End Date:</strong> {{ offering.availability_end_date }}</p>
         <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
         <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
-        <p><strong>Offering Description:</strong> {{ offering.offering_description }}</p>
+        <p><strong>Offering Description:</strong> {{ offering.description }}</p>
         <button> ORDER HERE </button>
     </div>
     <div class="offering-image">
@@ -186,7 +186,7 @@
     <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
     <p><strong></strong> <img src="{{ offering.offering_image.url }}" alt="Offering Image"></p>
     <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
-    <p><strong>Offering Description:</strong> {{ offering.offering_description }}</p>
+    <p><strong>Offering Description:</strong> {{ offering.description }}</p>
 
 
     {% if reviews %}

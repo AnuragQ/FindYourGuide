@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
-from .models import Offering, User
+from .models import Offering, User, LoginSession
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -16,15 +16,14 @@ from django.db.models import Q, Avg
 from .models import Booking
 from .forms import BookingForm
 
-from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .forms import RatingForm, ReviewOrderingForm, ReviewForm
 from .models import Rating, Review
 
-
-from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .forms import RatingForm, ReviewOrderingForm, ReviewForm
 from .models import Rating, Review
-
 
 from django.contrib import messages
+
 
 def index(request):
     q = request.GET.get(
@@ -92,6 +91,7 @@ def offering_detail(request, pk):
     # Set the cookie value
     response.set_cookie('recently_viewed_offerings', recently_viewed_offerings)
     return response
+
 
 # def offering_detail(request, pk):
 #     offering = get_object_or_404(Offering, pk=pk)
@@ -224,7 +224,6 @@ def booking_detail(request, pk):
     if booking:
         offering = Offering.objects.get(id=booking.offering.id)
 
-
     if booking.booking_status == 'pending':
         payment_session_duration_in_seconds = 60
         print(f"Creating payment session for booking {booking.id}, {payment_session_duration_in_seconds} seconds")
@@ -248,8 +247,6 @@ def profile(request):
         'services_taken': services_taken
     }
     return render(request, 'main_app/profile.html', context)
-
-
 
 
 def editprofile(request):
@@ -281,31 +278,26 @@ def addoffering(request):
         form = OfferingForm()
     return render(request, 'main_app/addoffering.html', {'form': form})
 
-def offering_page(req,pk):
 
+def offering_page(req, pk):
     offering = get_object_or_404(Offering, pk=pk)
     reviews = offering.reviews.all()
-    ratings =offering.ratings.all()
+    ratings = offering.ratings.all()
     comments = offering.comments.all()
 
     # Average Rating
 
     avg_rating_result = reviews.aggregate(avg_rating=Avg('score'))
     if avg_rating_result['avg_rating'] == None:
-        avg_rating=0
+        avg_rating = 0
     else:
         avg_rating = round(avg_rating_result['avg_rating'])
-
-
-
-
-
 
     # avg_rating_result=ratings.aggregate(avg_rating=Avg('score'))
     # avg_rating=round(avg_rating_result['avg_rating'])
 
-    #Total Comments
-    total_comments=reviews.count()
+    # Total Comments
+    total_comments = reviews.count()
 
     # total_comments= comments.count()
 
@@ -322,7 +314,6 @@ def offering_page(req,pk):
         elif order_by == 'lowest_rating':
             reviews = reviews.order_by('score')
 
-
     if req.method == 'POST':
         # if user has already rated
         form = ReviewForm(req.POST)
@@ -330,29 +321,27 @@ def offering_page(req,pk):
             # here user and offering attributes are used to get object if there is object
             # default value attibutes like score are used to assign values to those attributes if cannot get that object
             # Also get_or_created is not used to do any update
-            review,created=Review.objects.get_or_create(
+            review, created = Review.objects.get_or_create(
                 user=req.user,
                 offering=offering,
                 defaults={'score': form.cleaned_data['score'],
                           'text': form.cleaned_data['text']}
             )
             if not created:
-                review.score=form.cleaned_data['score']
+                review.score = form.cleaned_data['score']
                 review.text = form.cleaned_data['text']
                 review.save()
             return redirect('offering_page', pk)
 
     if req.method == 'GET':
         form = ReviewForm()
-    context ={'offering': offering,
-              'reviews': reviews,
-              'form': form,
-              'avg_rating': avg_rating,
-              'total_comments': total_comments,
-              'review_order_form': review_order_form }
-    return render(req,'main_app/offering_page.html',context)
-
-
+    context = {'offering': offering,
+               'reviews': reviews,
+               'form': form,
+               'avg_rating': avg_rating,
+               'total_comments': total_comments,
+               'review_order_form': review_order_form}
+    return render(req, 'main_app/offering_page.html', context)
 
 
 def user_profile(request, username):
@@ -361,3 +350,8 @@ def user_profile(request, username):
     # Render the user profile template with the user object
     return render(request, 'main_app/user_profile.html', {'profile_user': user})
 
+
+@login_required
+def get_login_sessions(request):
+    login_sessions = LoginSession.objects.filter(user=request.user)
+    return render(request, 'main_app/sessions.html', {'login_sessions': login_sessions})
