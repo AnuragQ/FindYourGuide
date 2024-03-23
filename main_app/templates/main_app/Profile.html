@@ -21,13 +21,27 @@
             <h2>User Details</h2>
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
-            <p>Bio: {{ user.bio }}</p>
-            <p>Location: {{ user.location }}</p>
-            <p>Occupation: {{ user.occupation }}</p>
-            <p>Hobbies: {{ user.hobbies }}</p>
-            <p>Languages: {{ user.languages }}</p>
-            <p>Travel Destinations: {{ user.travel_destinations }}</p>
-            <p>Goals: {{ user.goals }}</p>
+                                    {% if user.bio %}
+                        <p>Bio: {{ user.bio }}</p>
+                        {% endif %}
+                        {% if user.location %}
+                        <p>Location: {{ user.location }}</p>
+                        {% endif %}
+                        {% if user.occupation %}
+                        <p>Occupation: {{ user.occupation }}</p>
+                        {% endif %}
+                        {% if user.hobbies %}
+                        <p>Hobbies: {{ user.hobbies }}</p>
+                        {% endif %}
+                        {% if user.languages %}
+                        <p>Languages: {{ user.languages }}</p>
+                        {% endif %}
+                        {% if user.travel_destinations %}
+                        <p>Travel Destinations: {{ user.travel_destinations }}</p>
+                        {% endif %}
+                        {% if user.goals %}
+                        <p>Goals: {{ user.goals }}</p>
+                        {% endif %}
             <div class="post-tags">
               <div class="block-tag">
                 <ul class="list-unstyled d-flex">
