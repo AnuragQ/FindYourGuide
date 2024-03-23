@@ -274,3 +274,10 @@ def addoffering(request):
         form = OfferingForm()
 
     return render(request, 'main_app/addoffering.html', {'form': form})
+
+def user_profile(request, username):
+    # Fetch the user object based on the username
+    user = get_object_or_404(User, username=username)
+    # Render the user profile template with the user object
+    return render(request, 'main_app/user_profile.html', {'profile_user': user})
+
