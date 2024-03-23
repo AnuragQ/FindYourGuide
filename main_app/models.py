@@ -1,3 +1,4 @@
+from django.contrib.sessions.models import Session
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
@@ -103,3 +104,16 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'Booking ID: {self.id}, Status: {self.booking_status}, guest: {self.guest_user.username}'
+
+
+class LoginSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='login_sessions')
+    session_key = models.CharField(max_length=50, blank=True)
+    ip_address = models.CharField(max_length=50)
+    location = models.CharField(max_length=255)
+    browser_info = models.CharField(max_length=255)
+    logged_at = models.DateTimeField(auto_now_add=True)
+    logged_out_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.id}, {self.session_key}, {self.user.username} {self.ip_address}, {self.location} {self.logged_at}'
