@@ -80,7 +80,6 @@ class ReviewOrderingForm(forms.Form):
         ('lowest_rating', 'Lowest Rating'),
     )
     order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
-=======
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
