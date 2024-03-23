@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Booking, Offering
+
+from django.contrib.auth.forms import UserCreationForm ,UserChangeForm
+from .models import User, Booking, Offering,Rating,Review
+
 from django.forms import ModelForm
 
 
@@ -41,7 +43,46 @@ class OfferingForm(forms.ModelForm):
             'availability_end_date': forms.DateInput(attrs={'type': 'date'})
         }
 
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model=Rating
+        fields = ['score']
+
+class CommentOrderingForm(forms.Form):
+    ORDER_CHOICES = (
+        ('latest', 'Latest'),
+        ('oldest', 'Oldest'),
+        ('highest_rating', 'Highest Rating'),
+        ('lowest_rating', 'Lowest Rating'),
+    )
+    order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
+
+class ReviewForm(forms.ModelForm):
+    SCORE_CHOICES = [
+        (1, '★'),
+        (2, '★★'),
+        (3, '★★★'),
+        (4, '★★★★'),
+        (5, '★★★★★'),
+    ]
+    score = forms.ChoiceField(choices=SCORE_CHOICES, widget=forms.Select(), label='Rating')
+    class Meta:
+        model = Review
+        fields = ['score', 'text']
+        labels = { 'text': 'Comment'}
+
+class ReviewOrderingForm(forms.Form):
+    ORDER_CHOICES = (
+        ('latest', 'Latest'),
+        ('oldest', 'Oldest'),
+        ('highest_rating', 'Highest Rating'),
+        ('lowest_rating', 'Lowest Rating'),
+    )
+    order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
+=======
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+

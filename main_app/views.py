@@ -12,9 +12,17 @@ from django.views.generic import CreateView
 from .forms import CustomSignUpForm, OfferingForm, EditProfileForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
-from django.db.models import Q
+from django.db.models import Q, Avg
 from .models import Booking
 from .forms import BookingForm
+
+from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .models import Rating, Review
+
+
+from .forms import RatingForm , ReviewOrderingForm ,ReviewForm
+from .models import Rating, Review
+
 
 from django.contrib import messages
 
@@ -264,7 +272,6 @@ def addoffering(request):
             # Process the form data if valid
             form.save()
             print('hello homepage inside save')
-
             # Redirect to a success page or homepage
             return render(request, 'main_app/homepage.html')
         else:
@@ -272,8 +279,81 @@ def addoffering(request):
                 messages.error(request, error)
     else:
         form = OfferingForm()
-
     return render(request, 'main_app/addoffering.html', {'form': form})
+
+def offering_page(req,pk):
+
+    offering = get_object_or_404(Offering, pk=pk)
+    reviews = offering.reviews.all()
+    ratings =offering.ratings.all()
+    comments = offering.comments.all()
+
+    # Average Rating
+
+    avg_rating_result = reviews.aggregate(avg_rating=Avg('score'))
+    if avg_rating_result['avg_rating'] == None:
+        avg_rating=0
+    else:
+        avg_rating = round(avg_rating_result['avg_rating'])
+
+
+
+
+
+
+    # avg_rating_result=ratings.aggregate(avg_rating=Avg('score'))
+    # avg_rating=round(avg_rating_result['avg_rating'])
+
+    #Total Comments
+    total_comments=reviews.count()
+
+    # total_comments= comments.count()
+
+    # Handle comment ordering form
+    review_order_form = ReviewOrderingForm(req.GET)
+    if review_order_form.is_valid():
+        order_by = review_order_form.cleaned_data.get('order_by')
+        if order_by == 'latest':
+            reviews = reviews.order_by('-created_at')
+        elif order_by == 'oldest':
+            reviews = reviews.order_by('created_at')
+        elif order_by == 'highest_rating':
+            reviews = reviews.order_by('-score')
+        elif order_by == 'lowest_rating':
+            reviews = reviews.order_by('score')
+
+
+    if req.method == 'POST':
+        # if user has already rated
+        form = ReviewForm(req.POST)
+        if form.is_valid():
+            # here user and offering attributes are used to get object if there is object
+            # default value attibutes like score are used to assign values to those attributes if cannot get that object
+            # Also get_or_created is not used to do any update
+            review,created=Review.objects.get_or_create(
+                user=req.user,
+                offering=offering,
+                defaults={'score': form.cleaned_data['score'],
+                          'text': form.cleaned_data['text']}
+            )
+            if not created:
+                review.score=form.cleaned_data['score']
+                review.text = form.cleaned_data['text']
+                review.save()
+            return redirect('offering_page', pk)
+
+    if req.method == 'GET':
+        form = ReviewForm()
+    context ={'offering': offering,
+              'reviews': reviews,
+              'form': form,
+              'avg_rating': avg_rating,
+              'total_comments': total_comments,
+              'review_order_form': review_order_form }
+    return render(req,'main_app/offering_page.html',context)
+
+
+
 
 def user_profile(request, username):
     # Fetch the user object based on the username
