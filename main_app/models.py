@@ -72,3 +72,6 @@ class Booking(models.Model):
 
     booking_status = models.CharField(
         max_length=20, choices=STATUS, default='pending')
+
+    def __str__(self):
+        return f'Booking ID: {self.id}, Status: {self.booking_status}, guest: {self.guest_user.username}'
