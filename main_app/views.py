@@ -26,9 +26,21 @@ def index(request):
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
     )
+    recently_viewed_offerings = []
+    if 'recently_viewed_offerings' in request.COOKIES:
+        # Get the cookie value
+        recently_viewed_offerings_ids = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings_ids = recently_viewed_offerings_ids.split(
+            ',')
+        # Fetch the offerings with the ids in the list
+        recently_viewed_offerings = Offering.objects.filter(
+            id__in=recently_viewed_offerings_ids)
+
     # print(offerings)
     context = {
-        'offerings': offerings
+        'offerings': offerings,
+        'recently_viewed_offerings': recently_viewed_offerings
     }
     return render(request, 'main_app/homepage.html', context)
 
@@ -44,11 +56,34 @@ def offering_detail(request, pk):
         for booking in Booking.objects.filter(
                 guest_user=request.user):
             user_bookings.append(booking.offering.id)
-    # print(user_bookings)
-    form = OfferingForm(instance=offering)  # Instantiate the form with the offering object
-    return render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
-                                                             'offering_fields': offering_fields, 'form': form})
 
+    # set the cookie value
+    # Instantiate the form with the offering object
+    form = OfferingForm(instance=offering)
+    response = render(request, 'main_app/offering_detail.html', {'offering': offering, 'user_bookings': user_bookings,
+                                                                 'offering_fields': offering_fields, 'form': form})
+    # Check if the offering id is in the cookie
+    if 'recently_viewed_offerings' in request.COOKIES:
+        recently_viewed_offerings = request.COOKIES['recently_viewed_offerings']
+        # Split the cookie value into a list
+        recently_viewed_offerings = recently_viewed_offerings.split(',')
+        # Check if the offering id is already in the list
+        if str(pk) in recently_viewed_offerings:
+            # Remove the offering id from the list
+            recently_viewed_offerings.remove(str(pk))
+        # Add the offering id to the beginning of the list
+        recently_viewed_offerings.insert(0, str(pk))
+        # Keep the list length to 5
+        recently_viewed_offerings = recently_viewed_offerings[:5]
+        # Join the list into a string
+        recently_viewed_offerings = ','.join(recently_viewed_offerings)
+    else:
+        # If the cookie does not exist, set the cookie value to the offering id
+        recently_viewed_offerings = str(pk)
+
+    # Set the cookie value
+    response.set_cookie('recently_viewed_offerings', recently_viewed_offerings)
+    return response
 
 # def offering_detail(request, pk):
 #     offering = get_object_or_404(Offering, pk=pk)
@@ -83,6 +118,7 @@ def offering_detail(request, pk):
 #         # messages.error(request, 'Please log in to edit this offering.')
 #         return redirect('login')
 
+
 @login_required
 def offering_edit(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
@@ -97,7 +133,8 @@ def offering_edit(request, pk):
             form = OfferingForm(instance=offering)
         return render(request, 'main_app/editoffering.html', {'form': form})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
 @login_required
@@ -110,7 +147,8 @@ def offering_delete(request, pk):
             return redirect('homepage')  # Redirect after deletion
         return render(request, 'main_app/deleteoffering.html', {'offering': offering})
     else:
-        return redirect('offering_detail', pk=pk)  # Redirect if the user is not the host
+        # Redirect if the user is not the host
+        return redirect('offering_detail', pk=pk)
 
 
 # class SignUpView(CreateView):
@@ -178,6 +216,7 @@ def booking_detail(request, pk):
     if booking:
         offering = Offering.objects.get(id=booking.offering.id)
 
+
     if booking.booking_status == 'pending':
         payment_session_duration_in_seconds = 60
         print(f"Creating payment session for booking {booking.id}, {payment_session_duration_in_seconds} seconds")
@@ -189,6 +228,7 @@ def booking_detail(request, pk):
 
 # def profile(request):
 #    return render(request, 'main_app/profile.html')
+
 
 def profile(request):
     # Fetch data for services offered and services taken
@@ -202,15 +242,16 @@ def profile(request):
     return render(request, 'main_app/profile.html', context)
 
 
-# def editprofile(request):
-#   return render(request, 'main_app/editprofile.html')
+
 
 def editprofile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        form = EditProfileForm(
+            request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')  # Redirect to the profile page after successful edit
+            # Redirect to the profile page after successful edit
+            return redirect('profile')
     else:
         form = EditProfileForm(instance=request.user)
     return render(request, 'main_app/editprofile.html', {'form': form})
