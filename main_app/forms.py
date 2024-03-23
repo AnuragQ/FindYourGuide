@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Booking, Offering
 from django.forms import ModelForm
 
-
 from main_app.models import Offering
 
 
@@ -20,7 +19,6 @@ class CustomSignUpForm(UserCreationForm):
 
 
 class BookingForm(ModelForm):
-
     class Meta:
         model = Booking
         fields = ['booking_start_date', 'booking_end_date', 'no_of_guests']
@@ -38,10 +36,14 @@ class OfferingForm(forms.ModelForm):
                   ]
         widgets = {
             'availability_start_date': forms.DateInput(attrs={'type': 'date'}),
-            'availability_end_date': forms.DateInput(attrs={'type': 'date'})
+            'availability_end_date': forms.DateInput(attrs={'type': 'date'}),
+            # 'offering_image': forms.ImageField(label='Offering Image')  # Use FileField for image upload
         }
+    # offering_image = forms.FileField(label='Offering Image')  # Use FileField for image upload
+
 
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+        fields = (
+        'email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
