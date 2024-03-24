@@ -115,23 +115,6 @@ def offering_edit(request, pk):
         return redirect('offering_detail', pk=pk)
 
 
-# @login_required
-# def offering_delete(request, pk):
-#     offering = get_object_or_404(Offering, pk=pk)
-#     # Check if the current user is the host user of the offering
-#     print("request.method" , request.method)
-#     if request.user == offering.host_user:
-#         if request.method == 'POST':
-#             offering.delete()
-#             print("offering deleted")
-#             return redirect('homepage')  # Redirect after deletion
-#         else:
-#             print("offering not deleted")
-#             return render(request, 'main_app/deleteoffering.html', {'offering': offering})
-#     else:
-#         # Redirect if the user is not the host
-#         return redirect('offering_detail', pk=pk)
-
 @login_required
 def offering_delete(request, pk):
     offering = get_object_or_404(Offering, pk=pk)

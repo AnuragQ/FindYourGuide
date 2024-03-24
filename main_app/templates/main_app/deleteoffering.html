@@ -6,9 +6,9 @@
    <table>{{ form.as_table }} </table>
 {#     <p>Offering Deleted</p>#}
 {#    <button type="submit">Delete</button>#}
-     <p>Are you sure you want to delete the offering "{{ offering.title }}"?</p>
-   <button type="submit" name="confirm" value="yes">Yes</button>
-   <button type="submit" name="confirm" value="no">No</button>
+     <h3>Are you sure you want to delete the offering "{{ offering.title }}"?</h3>
+   <button  class="btn btn-primary" type="submit" name="confirm" value="yes">Yes</button>
+   <button  class="btn btn-primary" type="submit" name="confirm" value="no">No</button>
   </form>
 </div>
 {% endblock %}
