@@ -1,10 +1,14 @@
 {% extends 'main_app/index.html' %}
 {% block body_block %}
 <div>
- <form method="get" enctype="multipart/form-data">
+ <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
    <table>{{ form.as_table }} </table>
-    <button type="submit">Delete</button>
+{#     <p>Offering Deleted</p>#}
+{#    <button type="submit">Delete</button>#}
+     <p>Are you sure you want to delete the offering "{{ offering.title }}"?</p>
+   <button type="submit" name="confirm" value="yes">Yes</button>
+   <button type="submit" name="confirm" value="no">No</button>
   </form>
 </div>
 {% endblock %}
