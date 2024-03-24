@@ -75,12 +75,10 @@ def get_stripe_payment_info(request, session_id):
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'GET':
-        domain_url = 'http://localhost:8000/'
+        domain_url = 'http://127.0.0.1:8000/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             booking_id = request.GET.get('booking_id')
-
-            # Retrieve product details (e.g., name, price) from the database based on the product_id
             booking = Booking.objects.get(pk=booking_id)
 
             # Construct line item for Stripe Checkout with the specified quantity
@@ -91,7 +89,7 @@ def create_checkout_session(request):
                     'unit_amount': int(booking.offering.price * 100),  # Convert price to cents
                     'product_data': {
                         'name': booking.offering.title,
-                        'images': [domain_url + booking.offering.offering_image.url]
+                        'images': [domain_url +booking.offering.offering_image.url]
                     },
                 },
             }

@@ -213,7 +213,10 @@ def booking_detail(request, pk):
         expiry_time = datetime.now() + timedelta(seconds=payment_session_duration_in_seconds)
         request.session['payment_expiry'] = expiry_time.timestamp()  # or should it be an object with user id
 
-    return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering})
+    pending_with_price = True if booking.booking_status == 'pending' and booking.offering.price > 0 else False
+
+    return render(request, 'main_app/booking_detail.html', {'booking': booking, 'offering': offering,
+                                                            'pending_with_price': pending_with_price})
 
 
 # def profile(request):
