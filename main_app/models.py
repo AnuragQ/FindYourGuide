@@ -114,13 +114,30 @@ class LoginSession(models.Model):
     ip_address = models.CharField(max_length=50)
     location = models.CharField(max_length=255)
     browser_info = models.CharField(max_length=255)
-    logged_at = models.DateTimeField(auto_now_add=True)
+    logged_at = models.DateTimeField(null=False)
     logged_out_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.session_key}, {self.user.username} {self.ip_address}, {self.location} {self.logged_at}'
 
+    def save(self, *args, **kwargs):
+        if not self.pk:  # This will check if it is a new object
+            self.logged_at = datetime.now()
+        super().save(*args, **kwargs)
+
     # def save(self, *args, **kwargs):
     #     if not self.pk:  # This will check if it is a new object
     #         self.logged_at = datetime.now()
     #     super().save(*args, **kwargs)
+
+
+class Feedback(models.Model):
+    title = models.CharField(max_length=50)
+    feedback = models.TextField()
+    ip_address = models.CharField(max_length=50)
+    location = models.CharField(max_length=255)
+    browser_info = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='feedbacks', null=True)
+    def __str__(self):
+        return f"{self.title}, {self.feedback}, {self.ip_address} {self.created_at}"

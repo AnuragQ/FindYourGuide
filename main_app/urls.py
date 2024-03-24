@@ -28,10 +28,13 @@ urlpatterns = [
     path('editprofile/', views.editprofile, name='editprofile'),
     path('addoffering/', views.addoffering, name='addoffering'),
 
+    # path('deleteoffering/', views.deleteoffering, name='deleteoffering'),
+
     # Offering Page
     path('offeringpage/<int:pk>', views.offering_page, name='offering_page'),
 
     path('user/<str:username>/', views.user_profile, name='user_profile'),
 
     path('sessions/', views.get_login_sessions, name='sessions'),
+    path('feedback/', views.feedback_view, name='feedback'),
 ]
