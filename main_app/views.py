@@ -339,8 +339,9 @@ def offering_page(req, pk):
 def user_profile(request, username):
     # Fetch the user object based on the username
     user = get_object_or_404(User, username=username)
+    services_offered = Offering.objects.filter(host_user=user)
     # Render the user profile template with the user object
-    return render(request, 'main_app/user_profile.html', {'profile_user': user})
+    return render(request, 'main_app/user_profile.html', {'profile_user': user, 'services_offered': services_offered})
 
 
 @login_required
