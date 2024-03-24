@@ -1,10 +1,9 @@
 from django import forms
 
-from django.contrib.auth.forms import UserCreationForm ,UserChangeForm
-from .models import User, Booking, Offering,Rating,Review
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import User, Booking, Offering, Rating, Review, Feedback
 
 from django.forms import ModelForm
-
 
 from main_app.models import Offering
 
@@ -22,7 +21,6 @@ class CustomSignUpForm(UserCreationForm):
 
 
 class BookingForm(ModelForm):
-
     class Meta:
         model = Booking
         fields = ['booking_start_date', 'booking_end_date', 'no_of_guests']
@@ -46,8 +44,9 @@ class OfferingForm(forms.ModelForm):
 
 class RatingForm(forms.ModelForm):
     class Meta:
-        model=Rating
+        model = Rating
         fields = ['score']
+
 
 class CommentOrderingForm(forms.Form):
     ORDER_CHOICES = (
@@ -58,6 +57,7 @@ class CommentOrderingForm(forms.Form):
     )
     order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
 
+
 class ReviewForm(forms.ModelForm):
     SCORE_CHOICES = [
         (1, '★'),
@@ -67,10 +67,12 @@ class ReviewForm(forms.ModelForm):
         (5, '★★★★★'),
     ]
     score = forms.ChoiceField(choices=SCORE_CHOICES, widget=forms.Select(), label='Rating')
+
     class Meta:
         model = Review
         fields = ['score', 'text']
-        labels = { 'text': 'Comment'}
+        labels = {'text': 'Comment'}
+
 
 class ReviewOrderingForm(forms.Form):
     ORDER_CHOICES = (
@@ -80,9 +82,16 @@ class ReviewOrderingForm(forms.Form):
         ('lowest_rating', 'Lowest Rating'),
     )
     order_by = forms.ChoiceField(choices=ORDER_CHOICES, label='Order By')
+
+
 class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+        fields = (
+        'email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
 
 
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['title', 'feedback']

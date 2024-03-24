@@ -4,12 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from user_agents import parse
 
+from core.views import _get_location_from_ip
 from .models import Offering, User, LoginSession
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import CustomSignUpForm, OfferingForm, EditProfileForm
+from .forms import CustomSignUpForm, OfferingForm, EditProfileForm, FeedbackForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
 from django.db.models import Q, Avg
@@ -99,6 +101,8 @@ def offering_detail(request, pk):
 def offering_edit(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
     # Check if the current user is the host user of the offering
+    print("request.method" , request.method)
+
     if request.user == offering.host_user:
         if request.method == 'POST':
             form = OfferingForm(request.POST, request.FILES, instance=offering)
@@ -119,9 +123,20 @@ def offering_delete(request, pk):
     # Check if the current user is the host user of the offering
     if request.user == offering.host_user:
         if request.method == 'POST':
-            offering.delete()
-            return redirect('homepage')  # Redirect after deletion
-        return render(request, 'main_app/deleteoffering.html', {'offering': offering})
+            confirm = request.POST.get('confirm', None)
+            print("confirm", confirm)
+
+            if confirm == 'yes':
+                offering.delete()
+                # return HttpResponseRedirect('/homepage/')  # Redirect after deletion
+                print("offering deleted")
+                return redirect('index')
+            else:
+                print("offering not deleted")
+
+                return redirect('offering_detail', pk=pk)  # Redirect back to offering detail page
+        else:
+            return render(request, 'main_app/deleteoffering.html', {'offering': offering})
     else:
         # Redirect if the user is not the host
         return redirect('offering_detail', pk=pk)
@@ -234,19 +249,25 @@ def editprofile(request):
 
 
 def addoffering(request):
+
     if request.method == 'POST':
         form = OfferingForm(request.POST, request.FILES)
         if form.is_valid():
             # Process the form data if valid
             form.save()
-            print('hello homepage inside save')
+            print('hello homepage inside save----')
             # Redirect to a success page or homepage
-            return render(request, 'main_app/homepage.html')
+            # return render(request, 'main_app/homepage.html'+
+            # )
+            return redirect('index')
+
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
     else:
         form = OfferingForm()
+        print('hello before final return')
+
     return render(request, 'main_app/addoffering.html', {'form': form})
 
 
@@ -326,3 +347,28 @@ def user_profile(request, username):
 def get_login_sessions(request):
     login_sessions = LoginSession.objects.filter(user=request.user)
     return render(request, 'main_app/sessions.html', {'login_sessions': login_sessions})
+
+
+def feedback_view(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+
+            print("Getting client info")
+            ip_address = request.META.get('REMOTE_ADDR')
+            user_agent = parse(request.META.get('HTTP_USER_AGENT'))
+            location = _get_location_from_ip(ip_address)
+            browser_info = user_agent.ua_string  # user_agent.browser.family
+            feedback.ip_address = ip_address
+            feedback.browser_info = browser_info
+            feedback.location = location
+            if request.user.is_authenticated:
+                feedback.user = request.user
+            feedback.save()
+            messages.success(request,"Thank you for your feedback!")
+            return redirect('/')  # Redirect to a thank you page
+    else:
+        form = FeedbackForm()
+
+    return render(request, 'main_app/feedback.html', {'form': form})
