@@ -1,0 +1,29 @@
+{% extends 'main_app/index.html' %}
+
+{% block body_block %}
+   <h1>User Sessions</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Session ID</th>
+                <th>IP Address</th>
+                <th>Location</th>
+                <th>Browser Info</th>
+                <th>Login Time</th>
+                <th>Logout Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for login_session in login_sessions %}
+            <tr>
+                <td>{{ login_session.session_key }}</td>
+                <td>{{ login_session.ip_address }}</td>
+                <td>{{ login_session.location }}</td>
+                <td>{{ login_session.browser_info }}</td>
+                <td>{{ login_session.logged_at }}</td>
+                <td>{{ login_session.logged_out_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

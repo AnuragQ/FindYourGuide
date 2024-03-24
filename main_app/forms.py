@@ -85,3 +85,4 @@ class EditProfileForm(UserChangeForm):
         model = User
         fields = ('email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
 
+

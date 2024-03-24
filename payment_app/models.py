@@ -1,7 +1,6 @@
 from django.db import models
 
 from main_app.models import Booking, User
-from product_app.models import Product
 
 CURRENCIES = [('USD', "USD"),
               ('EUR', "EUR"),
