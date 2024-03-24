@@ -99,6 +99,8 @@ def offering_detail(request, pk):
 def offering_edit(request, pk):
     offering = get_object_or_404(Offering, pk=pk)
     # Check if the current user is the host user of the offering
+    print("request.method" , request.method)
+
     if request.user == offering.host_user:
         if request.method == 'POST':
             form = OfferingForm(request.POST, request.FILES, instance=offering)
@@ -119,9 +121,20 @@ def offering_delete(request, pk):
     # Check if the current user is the host user of the offering
     if request.user == offering.host_user:
         if request.method == 'POST':
-            offering.delete()
-            return redirect('homepage')  # Redirect after deletion
-        return render(request, 'main_app/deleteoffering.html', {'offering': offering})
+            confirm = request.POST.get('confirm', None)
+            print("confirm", confirm)
+
+            if confirm == 'yes':
+                offering.delete()
+                # return HttpResponseRedirect('/homepage/')  # Redirect after deletion
+                print("offering deleted")
+                return redirect('index')
+            else:
+                print("offering not deleted")
+
+                return redirect('offering_detail', pk=pk)  # Redirect back to offering detail page
+        else:
+            return render(request, 'main_app/deleteoffering.html', {'offering': offering})
     else:
         # Redirect if the user is not the host
         return redirect('offering_detail', pk=pk)
@@ -231,19 +244,25 @@ def editprofile(request):
 
 
 def addoffering(request):
+
     if request.method == 'POST':
         form = OfferingForm(request.POST, request.FILES)
         if form.is_valid():
             # Process the form data if valid
             form.save()
-            print('hello homepage inside save')
+            print('hello homepage inside save----')
             # Redirect to a success page or homepage
-            return render(request, 'main_app/homepage.html')
+            # return render(request, 'main_app/homepage.html'+
+            # )
+            return redirect('index')
+
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
     else:
         form = OfferingForm()
+        print('hello before final return')
+
     return render(request, 'main_app/addoffering.html', {'form': form})
 
 
