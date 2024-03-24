@@ -62,42 +62,6 @@
                       >Add Offering</a
                     >
                   </li>
-                  <li>
-                    <a
-                      class="btn btn-dark btn-small btn-rounded"
-                      onclick="toggleServices('services-offered')"
-                      >My Offerings</a
-                    >
-                    <section id="services-offered" class="services-list hidden">
-                      <h5>Services Offered</h5>
-                      <ul>
-                        <!-- Dynamic content for services offered -->
-                        {% for service in services_offered %}
-                        <li>
-                          <a href="{% url 'offering_detail' service.pk %}"
-                            >{{ service.title }}</a
-                          >
-                        </li>
-                        {% endfor %}
-                      </ul>
-                    </section>
-                  </li>
-                  <li>
-                    <a
-                      class="btn btn-dark btn-small btn-rounded"
-                      onclick="toggleServices('services-taken')"
-                      >My Bookings</a
-                    >
-                    <section id="services-taken" class="services-list hidden">
-                      <h5>Services Taken</h5>
-                      <ul>
-                        <!-- Dynamic content for services taken -->
-                        {% for service in services_taken %}
-                        <li><a href="{% url 'booking_detail' service.pk %}">{{ service.offering.title }}</a></li>
-                        {% endfor %}
-                      </ul>
-                    </section>
-                  </li>
                 </ul>
               </div>
             </div>
@@ -179,14 +143,5 @@
 
 </main>
 
-<script>
-  function toggleServices(activeSectionId) {
-    var serviceSections = document.querySelectorAll(".services-list");
-    serviceSections.forEach(function (section) {
-      section.classList.add("hidden");
-    });
-    var activeSection = document.getElementById(activeSectionId);
-    activeSection.classList.remove("hidden");
-  }
-</script>
+
 {% endblock %}
