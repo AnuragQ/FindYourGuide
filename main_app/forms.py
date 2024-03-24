@@ -7,6 +7,7 @@ from django.forms import ModelForm
 
 from main_app.models import Offering
 
+from datetime import date
 
 class CustomSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -25,9 +26,12 @@ class BookingForm(ModelForm):
         model = Booking
         fields = ['booking_start_date', 'booking_end_date', 'no_of_guests']
         widgets = {
-            'booking_start_date': forms.DateInput(attrs={'type': 'date', 'min': '2024-02-15', 'max': '2024-04-30'}),
-            'booking_end_date': forms.DateInput(attrs={'type': 'date'})
+            # minimum date is booking start date
+            'booking_start_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
+            'booking_end_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
         }
+
+
 
 
 class OfferingForm(forms.ModelForm):
@@ -37,8 +41,9 @@ class OfferingForm(forms.ModelForm):
                   'offering_type', 'offering_image', 'offering_time'
                   ]
         widgets = {
-            'availability_start_date': forms.DateInput(attrs={'type': 'date'}),
-            'availability_end_date': forms.DateInput(attrs={'type': 'date'})
+            # minimum start date shoud be grea
+            'availability_start_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
+            'availability_end_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
         }
 
 
