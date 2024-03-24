@@ -1,10 +1,30 @@
 {% extends 'main_app/index.html' %}
 {% block body_block %}
 <div>
- <form method="post">
+ <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
    <table>{{ form.as_table }} </table>
     <button type="submit">Save</button>
   </form>
 </div>
 {% endblock %}
+{#{% extends 'main_app/index.html' %}#}
+{##}
+{#{% block body_block %}#}
+{#<div>#}
+{# <form method="post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#    <table>#}
+{#      {{ form.non_field_errors }}#}
+{#      {% for field in form.visible_fields %}#}
+{#        <tr>#}
+{#          <th>{{ field.label_tag }}</th>#}
+{#          <td>{{ field }}</td>#}
+{#          <td>{{ field.errors }}</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#    </table>#}
+{#    <button type="submit">Save</button>#}
+{#  </form>#}
+{#</div>#}
+{#{% endblock %}#}

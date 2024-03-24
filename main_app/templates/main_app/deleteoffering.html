@@ -1,7 +1,7 @@
 {% extends 'main_app/index.html' %}
 {% block body_block %}
 <div>
- <form method="get">
+ <form method="get" enctype="multipart/form-data">
     {% csrf_token %}
    <table>{{ form.as_table }} </table>
     <button type="submit">Delete</button>

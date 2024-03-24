@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 
 from main_app.models import Booking
-from payment_app.models import Product
 from .models import Payment
 from django.db.models import Q
 
@@ -71,47 +70,6 @@ def get_stripe_payment_info(request, session_id):
         return JsonResponse(checkout_session)
     except stripe.error.InvalidRequestError:
         return JsonResponse({'error': 'Invalid Session ID'}, status=400)
-
-
-# Not used
-@csrf_exempt
-def create_checkout_session_post(request):
-    if request.method == 'POST':
-        domain_url = 'http://localhost:8000/'
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            line_items = []
-            for item in data:
-                product_id = item.get('product_id')
-                quantity = item.get('quantity')
-                # Retrieve product details (e.g., name, price) from database based on product_id
-                product = Product.objects.get(pk=product_id)
-                line_item = {
-                    'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': product.price * 100,  # Convert price to cents
-                        'product_data': {
-                            'name': product.name,
-                        },
-                    },
-                    'quantity': quantity,
-                }
-                line_items.append(line_item)
-
-            checkout_session = stripe.checkout.Session.create(
-                success_url=domain_url + 'payment/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'payment/cancelled/',
-                payment_method_types=['card'],
-                mode='payment',
-                currency='usd',
-                line_items=line_items,
-            )
-            return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
-    else:
-        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
 
 
 @csrf_exempt

@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib import admin
 from django.urls import include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 #from .views import SignUpView
 from django.contrib.auth import views as auth_views
 
@@ -25,6 +27,11 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('editprofile/', views.editprofile, name='editprofile'),
     path('addoffering/', views.addoffering, name='addoffering'),
+
+    # Offering Page
+    path('offeringpage/<int:pk>', views.offering_page, name='offering_page'),
+
     path('user/<str:username>/', views.user_profile, name='user_profile'),
 
+    path('sessions/', views.get_login_sessions, name='sessions'),
 ]

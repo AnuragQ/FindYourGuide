@@ -1,0 +1,285 @@
+
+{% extends 'main_app/index.html' %}
+{% load negate %}
+{% load star %}
+{% load static %}
+
+
+{% block css_head %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/offering.css' %}" />
+{% endblock %}
+{% block head_block %}
+
+
+{% endblock %}
+
+
+{#{% block content %}#}
+{% block body_block %}
+
+<div class="container-k">
+<div class="offering-container">
+
+    <div class="offering-detailse">
+        <!-- OFFERING DETAILS -->
+        <h1>{{ offering.title }}</h1>
+        <p><strong>Description:</strong> {{ offering.description }}</p>
+        <p><strong>Price:</strong> ${{ offering.price }}</p>
+        <p><strong>Host User:</strong> {{ offering.host_user.username }}</p>
+        <p><strong>Availability Start Date:</strong> {{ offering.availability_start_date }}</p>
+        <p><strong>Availability End Date:</strong> {{ offering.availability_end_date }}</p>
+        <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
+        <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
+        <p><strong>Offering Description:</strong> {{ offering.description }}</p>
+        <button> ORDER HERE </button>
+    </div>
+    <div class="offering-image">
+        <img src="{{ offering.offering_image.url }}" alt="Offering Image">
+    </div>
+</div>
+
+    {% if reviews %}
+    <!-- REVIEWS SECTION -->
+    <div class="reviews-section">
+        <h2>Ratings & Comments</h2>
+
+
+<div class="section-container">
+    <!-- Average Ratings -->
+    <div class="ratings-comments">
+        <div class="avg-rating-section">
+            Average Ratings:
+            <div class="rating-stars">
+                {% for star in avg_rating|star %}
+                    ★
+                {% endfor %}
+                {% for star in avg_rating|negate|add:5|star %}
+                    ☆
+                {% empty %}
+                    No ratings yet.
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Total Comments -->
+        <div class="total-comments">
+            Total Comments: {{ total_comments }}
+        </div>
+    </div>
+
+    <!-- Order Form -->
+        <form method="get" class="inline-form">
+    {% for field in review_order_form %}
+        <div class="form-field">
+            {{ field }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit">Sort By</button>
+</form>
+</div>
+
+
+{#    <form method="get" class="inline-form">#}
+{#    {% for field in review_order_form %}#}
+{#        <div class="form-field">#}
+{#            {{ field }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}#}
+{#        </div>#}
+{#    {% endfor %}#}
+{#    <button type="submit">Submit</button>#}
+{#</form>#}
+
+
+
+
+
+{#            <form method="get">#}
+{#        {{ review_order_form.as_p }}#}
+{#        <button type="submit">Submit</button>#}
+{#            </form>#}
+{##}
+{#        <!-- AVERAGE RATINGS -->#}
+{#        <div class="rating-section">#}
+{#            Average Ratings:#}
+{#            <div class="rating-stars">#}
+{#                {% for star in avg_rating|star %}#}
+{#                    ★#}
+{#                {% endfor %}#}
+{#                {% for star in avg_rating|negate|add:5|star %}#}
+{#                    ☆#}
+{#                {% empty %}#}
+{#                    No ratings yet.#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            <p>Total Comments: {{ total_comments }}</p>#}
+{#        </div>#}
+
+        <!-- USER REVIEWS -->
+        <ul>
+            {% for review in reviews %}
+                <li class="review-item">
+                    <strong>{{ review.user.username }}</strong> ({{ review.created_at|timesince }} ago): {{ review.text }}
+                    <div class="rating-stars blocky">
+                        {% for star in review.score|star %}
+                            ★
+                        {% endfor %}
+                        {% for star in review.score|negate|add:5|star %}
+                            ☆
+                        {% empty %}
+
+                        {% endfor %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- FORM TO SUBMIT A NEW RATING -->
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'offering_page' offering.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Review</button>
+    </form>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h1>BELOW SIMPLE PAGE WITHOUT CSS </h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    OFFERING DETAILS #}
+    <h1>{{ offering.title }}</h1>
+    <p><strong>Description:</strong> {{ offering.description }}</p>
+    <p><strong>Price:</strong> ${{ offering.price }}</p>
+    <p><strong>Host User:</strong> {{ offering.host_user.username }}</p>
+    <p><strong>Availability Start Date:</strong> {{ offering.availability_start_date }}</p>
+    <p><strong>Availability End Date:</strong> {{ offering.availability_end_date }}</p>
+    <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
+    <p><strong></strong> <img src="{{ offering.offering_image.url }}" alt="Offering Image"></p>
+    <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
+    <p><strong>Offering Description:</strong> {{ offering.description }}</p>
+
+
+    {% if reviews %}
+{#        SORTING COMMENTS #}
+        <form method="get">
+    {{ review_order_form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+    <h2>Ratings</h2>
+
+        {{ review.user.username }}:
+{#        FOR SHOWING AVERAGE RATINGS and Total Comments#}
+
+               Average Ratings: {% for star in avg_rating|star %}
+                    ★
+                {% endfor %}
+                {% for star in avg_rating|negate|add:5|star %}
+                    ☆
+                {% empty %}
+                {% endfor %}
+        <br>
+        Total Comments: {{ total_comments }}
+
+        {#    FOR SHOWING reviews #}
+
+        {% for review in reviews %}
+{#            FOR SHOWING COMMENTS #}
+        <li>
+        <strong>@{{ review.user.username }}</strong> ({{ review.created_at|timesince }} ago): {{ review.text }}
+        </li>
+{#            FOR SHOWING RATINGS#}
+            <li>
+                {% for star in review.score|star %}
+                    ★
+                {% endfor %}
+                {% for star in review.score|negate|add:5|star %}
+                    ☆
+{#                 if loop iterable is empty what should be the ouptut that is empty tag#}
+                {% empty %}
+                {% endfor %}
+            </li>
+
+        {% endfor %}
+
+{% endif %}
+
+
+<!-- Form to submit a new rating -->
+    {% if user.is_authenticated  %}
+    <form method="post" action="{% url 'offering_page' offering.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+    {% endif %}
+</form>
+
+
+{% endblock %}
+
+{#    block of form code #}
+{#    <div class="container">#}
+{#    <div class="filter-pane">#}
+{#        <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit">Search</button>#}
+{#    </form>#}
+{#    </div>#}
+{#    <div class="results-pane">#}
+        {#    Lisitng logic#}
+{#        {% if list_of_offerings %}#}
+{#        <ul>#}
+{#        {% for listing in list_of_offerings %}#}
+{#            <li>#}
+{#                 <a href="{% url 'offering_detail' listing.pk %}">{{ listing.title }} - {{ listing.description }}</a>#}
+{#            </li>#}
+{##}
+{#        {% endfor %}#}
+{#        </ul>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#</div>#}
+{##}
+
+
+
+
+
+
+
+
+
+
+
+
+
