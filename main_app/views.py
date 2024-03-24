@@ -107,6 +107,7 @@ def offering_edit(request, pk):
         if request.method == 'POST':
             form = OfferingForm(request.POST, request.FILES, instance=offering)
             if form.is_valid():
+                form.host_user = request.user
                 form.save()
                 return redirect('offering_detail', pk=pk)
         else:
@@ -129,6 +130,7 @@ def offering_delete(request, pk):
             if confirm == 'yes':
                 offering.delete()
                 # return HttpResponseRedirect('/homepage/')  # Redirect after deletion
+                
                 print("offering deleted")
                 return redirect('index')
             else:
@@ -255,6 +257,7 @@ def addoffering(request):
         if form.is_valid():
             # Process the form data if valid
             form.save()
+            form.host_user = request.user
             print('hello homepage inside save----')
             # Redirect to a success page or homepage
             # return render(request, 'main_app/homepage.html'+

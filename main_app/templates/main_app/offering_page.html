@@ -7,7 +7,7 @@
 
 {% block css_head %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/offering.css' %}" />
+    
 {% endblock %}
 {% block head_block %}
 
@@ -17,7 +17,7 @@
 
 {#{% block content %}#}
 {% block body_block %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/offering.css' %}" />
 <div class="container-k">
 <div class="offering-container">
 
@@ -31,8 +31,19 @@
         <p><strong>Availability End Date:</strong> {{ offering.availability_end_date }}</p>
         <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
         <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
-        <p><strong>Offering Description:</strong> {{ offering.description }}</p>
-        <button> ORDER HERE </button>
+        <p><strong>Offering Description:</strong> {{ offering.offering_description }}</p>
+        {% if user.is_authenticated %}
+            
+            {% if offering.id in user_bookings %}
+                <form action="{% url 'cancel_booking' offering.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Cancel Booking">
+                </form>
+            {% else %}
+                <a href="{% url 'create_booking' offering.id %}" class="btn btn-primary">Book</a>
+            {% endif %}
+        
+        {% endif %}
     </div>
     <div class="offering-image">
         <img src="{{ offering.offering_image.url }}" alt="Offering Image">
@@ -69,50 +80,17 @@
     </div>
 
     <!-- Order Form -->
-        <form method="get" class="inline-form">
-    {% for field in review_order_form %}
-        <div class="form-field">
-            {{ field }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
-        </div>
-    {% endfor %}
-    <button type="submit">Sort By</button>
-</form>
+    <form method="get" class="inline-form">
+        {% for field in review_order_form %}
+            <div class="form-field">
+                {{ field }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" style="background-color: black;">Sort By</button>
+    </form>
 </div>
 
 
-{#    <form method="get" class="inline-form">#}
-{#    {% for field in review_order_form %}#}
-{#        <div class="form-field">#}
-{#            {{ field }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}#}
-{#        </div>#}
-{#    {% endfor %}#}
-{#    <button type="submit">Submit</button>#}
-{#</form>#}
-
-
-
-
-
-{#            <form method="get">#}
-{#        {{ review_order_form.as_p }}#}
-{#        <button type="submit">Submit</button>#}
-{#            </form>#}
-{##}
-{#        <!-- AVERAGE RATINGS -->#}
-{#        <div class="rating-section">#}
-{#            Average Ratings:#}
-{#            <div class="rating-stars">#}
-{#                {% for star in avg_rating|star %}#}
-{#                    ★#}
-{#                {% endfor %}#}
-{#                {% for star in avg_rating|negate|add:5|star %}#}
-{#                    ☆#}
-{#                {% empty %}#}
-{#                    No ratings yet.#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#            <p>Total Comments: {{ total_comments }}</p>#}
-{#        </div>#}
 
         <!-- USER REVIEWS -->
         <ul>
@@ -140,7 +118,7 @@
     <form method="post" action="{% url 'offering_page' offering.pk %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit Review</button>
+        <button type="submit" class style="background-color: black;">Submit Review</button>
     </form>
     {% endif %}
 </div>
@@ -160,116 +138,10 @@
 
 
 
-    <h1>BELOW SIMPLE PAGE WITHOUT CSS </h1>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{#    OFFERING DETAILS #}
-    <h1>{{ offering.title }}</h1>
-    <p><strong>Description:</strong> {{ offering.description }}</p>
-    <p><strong>Price:</strong> ${{ offering.price }}</p>
-    <p><strong>Host User:</strong> {{ offering.host_user.username }}</p>
-    <p><strong>Availability Start Date:</strong> {{ offering.availability_start_date }}</p>
-    <p><strong>Availability End Date:</strong> {{ offering.availability_end_date }}</p>
-    <p><strong>Offering Type:</strong> {{ offering.get_offering_type_display }}</p>
-    <p><strong></strong> <img src="{{ offering.offering_image.url }}" alt="Offering Image"></p>
-    <p><strong>Offering Time:</strong> {{ offering.offering_time }}</p>
-    <p><strong>Offering Description:</strong> {{ offering.description }}</p>
-
-
-    {% if reviews %}
-{#        SORTING COMMENTS #}
-        <form method="get">
-    {{ review_order_form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-    <h2>Ratings</h2>
-
-        {{ review.user.username }}:
-{#        FOR SHOWING AVERAGE RATINGS and Total Comments#}
-
-               Average Ratings: {% for star in avg_rating|star %}
-                    ★
-                {% endfor %}
-                {% for star in avg_rating|negate|add:5|star %}
-                    ☆
-                {% empty %}
-                {% endfor %}
-        <br>
-        Total Comments: {{ total_comments }}
-
-        {#    FOR SHOWING reviews #}
-
-        {% for review in reviews %}
-{#            FOR SHOWING COMMENTS #}
-        <li>
-        <strong>@{{ review.user.username }}</strong> ({{ review.created_at|timesince }} ago): {{ review.text }}
-        </li>
-{#            FOR SHOWING RATINGS#}
-            <li>
-                {% for star in review.score|star %}
-                    ★
-                {% endfor %}
-                {% for star in review.score|negate|add:5|star %}
-                    ☆
-{#                 if loop iterable is empty what should be the ouptut that is empty tag#}
-                {% empty %}
-                {% endfor %}
-            </li>
-
-        {% endfor %}
-
-{% endif %}
-
-
-<!-- Form to submit a new rating -->
-    {% if user.is_authenticated  %}
-    <form method="post" action="{% url 'offering_page' offering.pk %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Review</button>
-    {% endif %}
-</form>
 
 
 {% endblock %}
 
-{#    block of form code #}
-{#    <div class="container">#}
-{#    <div class="filter-pane">#}
-{#        <form method="post">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <button type="submit">Search</button>#}
-{#    </form>#}
-{#    </div>#}
-{#    <div class="results-pane">#}
-        {#    Lisitng logic#}
-{#        {% if list_of_offerings %}#}
-{#        <ul>#}
-{#        {% for listing in list_of_offerings %}#}
-{#            <li>#}
-{#                 <a href="{% url 'offering_detail' listing.pk %}">{{ listing.title }} - {{ listing.description }}</a>#}
-{#            </li>#}
-{##}
-{#        {% endfor %}#}
-{#        </ul>#}
-{#        {% endif %}#}
-{#    </div>#}
-{#</div>#}
-{##}
 
 
 
