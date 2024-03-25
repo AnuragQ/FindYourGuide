@@ -1,10 +1,15 @@
-{% extends 'main_app/index.html' %} 
-
-{% block body_block %}
-  <h2>Edit Profile</h2>
-  <form method="post" enctype="multipart/form-data">
+{% extends 'main_app/index.html' %} {% block body_block %}
+<div class="max-w-xl mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Edit Profile</h2>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
+    <div class="p-4 bg-white rounded-lg shadow">{{ form.as_p }}</div>
+    <button
+      type="submit"
+      class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+    >
+      Save Changes
+    </button>
   </form>
+</div>
 {% endblock %}

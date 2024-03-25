@@ -1,52 +1,57 @@
-{% extends 'main_app/index.html' %}
-
-{% block body_block %}
+{% extends 'main_app/index.html' %} {% block body_block %}
 <main>
-
-    <!-- Section 1 - User Profile -->
-    <div class="container mx-auto mt-5">
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h1 class="text-3xl font-bold mb-4">Welcome to my profile!</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    {% if profile_user.first_name or profile_user.last_name %}
-                    <p class="text-lg"> My name is {{ profile_user.first_name }} {{ profile_user.last_name }}</p>
-                    {% endif %}
-                    <p class="text-lg"><strong>Username:</strong> {{ profile_user.username }}</p>
-                    <p>If you have any queries or need any details about the offerings, feel free to contact me via email:</p>
-                    <p class="text-lg"><strong>Email:</strong> {{ profile_user.email }}</p>
-                </div>
-            </div>
-        </div>
+  <!-- Section 1 - User Profile -->
+  <div class="container mx-auto mt-5 bg-gray-900 rounded-lg shadow-md p-6 mb-4">
+    <h1 class="text-3xl font-bold text-white mb-4">Welcome to my profile!</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="text-white">
+        {% if profile_user.first_name or profile_user.last_name %}
+        <p class="text-lg">
+          My name is {{ profile_user.first_name }} {{ profile_user.last_name }}
+        </p>
+        {% endif %}
+        <p class="text-lg">
+          <strong>Username:</strong> {{ profile_user.username }}
+        </p>
+        <p class="text-gray-300">
+          If you have any queries or need any details about the offerings, feel
+          free to contact me via email:
+        </p>
+        <p class="text-lg"><strong>Email:</strong> {{ profile_user.email }}</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Section 2 - My Offerings -->
-    <section id="latest-blog" class="padding-large">
-    <div class="container">
-      <div class="section-header d-flex flex-wrap align-items-center justify-content-between">
-        <h2 class="section-title">My Offerings</h2>
-      </div>
-      <div class="row d-flex flex-wrap">
+  <!-- Section 2 - My Offerings -->
+  <section id="latest-blog" class="p-6 bg-white">
+    <div class="container mx-auto">
+      <h2 class="text-2xl font-bold mb-6">My Offerings</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {% for service in services_offered %}
-            <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-                  <a href="{% url 'offering_detail' service.pk %}">
-                     <img src="{{ service.offering_image.url }}" alt="{{ service.title }}" class="post-image" />
-                 </a>
-            </div>
-            <div class="post-content d-flex">
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="{% url 'offering_detail' service.pk %}">{{ service.title }}</a>
-                </h3>
-                <p>{{ service.description }}</p>
-              </div>
-            </div>
-          </article>
+        <article
+          class="bg-gray-800 text-white rounded-lg shadow-md p-6 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+        >
+          <div class="image-holder mb-4">
+            <a href="{% url 'offering_detail' service.pk %}">
+              <img
+                src="{{ service.offering_image.url }}"
+                alt="{{ service.title }}"
+                class="post-image rounded-lg"
+              />
+            </a>
+          </div>
+          <div class="post-content">
+            <h3 class="text-xl text-white font-bold mb-2">
+              <a href="{% url 'offering_detail' service.pk %}"
+                >{{ service.title }}</a
+              >
+            </h3>
+            <p>{{ service.description }}</p>
+          </div>
+        </article>
         {% endfor %}
-        </div>
       </div>
+    </div>
   </section>
-
 </main>
 {% endblock %}
