@@ -49,6 +49,7 @@ def index(request):
         'offerings': offerings,
         'recently_viewed_offerings': recently_viewed_offerings
     }
+
     return render(request, 'main_app/homepage.html', context)
 
 
