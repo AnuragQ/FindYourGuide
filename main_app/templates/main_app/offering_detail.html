@@ -25,18 +25,10 @@
     {% if offering.offering_image %}
         <img src="{{ offering.offering_image.url }}" alt="Offering Image">
     {% endif %}
-{#      <form method="post" enctype="multipart/form-data">#}
-{#    {% csrf_token %}#}
-{#    <table>#}
-{#        {{ form.offering_image.errors }}#}
-{#        {{ form.offering_image.label_tag }}#}
-{#        {{ form.offering_image }}#}
-{#    </table>#}
-{#</form>#}
+
     <p><strong>Time:</strong> {{ offering.offering_time }}</p>
     
 
-{#     <div class="mt-4">#}
       <div>
     {% if request.user.is_authenticated and request.user == offering.host_user %}
      <div class="row">
@@ -65,27 +57,7 @@
      </div>
 </div>
 
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <h1 class="display-4">{{ offering.title }}</h1>
-        <p class="lead">{{ offering.description }}</p>
-      
-      <div class="mt-4">
-  <!-- button to book the offering -->
-{% if user.is_authenticated %}
-    {% if offering.id in user_bookings %}
-        <form action="{% url 'cancel_booking' offering.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Cancel Booking">
-        </form>
-    {% else %}
-        <a href="{% url 'create_booking' offering.id %}" class="btn btn-primary">Book</a>
-    {% endif %}
-{% else %}
-    <!-- Display something else for non-authenticated users, like a login/register link -->
-{% endif %}
-</form>
+ 
 
 
 {% endblock %}

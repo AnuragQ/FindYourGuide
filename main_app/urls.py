@@ -36,4 +36,5 @@ urlpatterns = [
     path('user/<str:username>/', views.user_profile, name='user_profile'),
 
     path('sessions/', views.get_login_sessions, name='sessions'),
+    path('feedback/', views.feedback_view, name='feedback'),
 ]

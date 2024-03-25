@@ -1,0 +1,12 @@
+{% extends 'main_app/index.html' %}
+
+{% block body_block %}
+    <h1>We want to hear from you</h1>
+
+    <form method="post">
+        {% csrf_token %}
+       <table> {{ form.as_table }} </table>
+        <button class="button btn btn-primary" type="submit">Submit</button>
+    </form>
+
+{% endblock %}

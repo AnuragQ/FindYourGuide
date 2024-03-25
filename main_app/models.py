@@ -18,7 +18,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
 
-    avatar = models.ImageField(null=True, default="avatar.svg")
+    avatar = models.ImageField(null=True)
 
     REQUIRED_FIELDS = []
     location = models.CharField(max_length=100, null=True)
@@ -37,19 +37,26 @@ class Offering(models.Model):
         User, on_delete=models.CASCADE, related_name='offerings', default=None)
     availability_start_date = models.DateField(default=None)
     availability_end_date = models.DateField(default=None)
+    is_available = models.BooleanField(default=True)
     # type of enum
     OFFERING_TYPE_CHOICES = [
         ('accomodation', 'Accomodation'),
         ('sight-seeing', 'Sight-seeing'),
         ('food-tour', 'Food-tour'),
     ]
-    offering_type = models.CharField(max_length=20, choices=OFFERING_TYPE_CHOICES, default='accomodation')
-    offering_image = models.ImageField(null=True, default="Chevrolet-Equinox-40-of-45.jpg")
+    offering_type = models.CharField(
+        max_length=20, choices=OFFERING_TYPE_CHOICES, default='accomodation')
+    offering_image = models.ImageField(
+        null=True, default="Chevrolet-Equinox-40-of-45.jpg")
     offering_time = models.TimeField(null=True, blank=True)
 
     def clean(self):
         if self.availability_start_date > self.availability_end_date:
-            raise ValidationError("Availability end date cannot be before availability start date")
+            raise ValidationError(
+                "Availability end date cannot be before availability start date")
+        if self.availability_start_date < timezone.now().date():
+            raise ValidationError(
+                "Availability start date cannot be in the past")
 
     def save(self):
         self.full_clean()
@@ -57,44 +64,53 @@ class Offering(models.Model):
 
 
 class Rating(models.Model):
-    offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='ratings')
+    offering = models.ForeignKey(
+        Offering, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    score = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['offering', 'user'], name="unique_rating")]
+        constraints = [models.UniqueConstraint(
+            fields=['offering', 'user'], name="unique_rating")]
 
 
 class Comment(models.Model):
-    offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='comments')
+    offering = models.ForeignKey(
+        Offering, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Review(models.Model):
-    offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='reviews')
+    offering = models.ForeignKey(
+        Offering, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    score = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)])
     # let's allow rating without comments
     text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['offering', 'user'], name="unique_review_for_offering_user")
+            models.UniqueConstraint(
+                fields=['offering', 'user'], name="unique_review_for_offering_user")
         ]
 
 
 class Booking(models.Model):
-    offering = models.ForeignKey(Offering, on_delete=models.CASCADE, related_name='bookings')
+    offering = models.ForeignKey(
+        Offering, on_delete=models.CASCADE, related_name='bookings')
     guest_user = models.ForeignKey(User, on_delete=models.CASCADE)
     # host_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     booking_start_date = models.DateField(default=None)
     booking_end_date = models.DateField(default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    no_of_guests = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    no_of_guests = models.IntegerField(
+        default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
     STATUS = [
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
@@ -104,23 +120,55 @@ class Booking(models.Model):
     booking_status = models.CharField(
         max_length=20, choices=STATUS, default='pending')
 
+    def clean(self):
+        #     # booking date should not be lessthan offering availability start date
+        #     if self.booking_start_date < self.offering.availability_start_date:
+        #         raise ValidationError("Booking start date cannot be before offering availability start date")
+        #     # booking date should not be greater than offering availability end date
+        #     if self.booking_end_date > self.offering.availability_end_date:
+        #         raise ValidationError("Booking end date cannot be after offering availability end date")
+        # booking start date should not be greater than booking end date
+        if self.booking_start_date > self.booking_end_date:
+            raise ValidationError(
+                "Booking start date cannot be after booking end date")
+
     def __str__(self):
         return f'Booking ID: {self.id}, Status: {self.booking_status}, guest: {self.guest_user.username}'
 
 
 class LoginSession(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='login_sessions')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='login_sessions')
     session_key = models.CharField(max_length=50, blank=True)
     ip_address = models.CharField(max_length=50)
     location = models.CharField(max_length=255)
     browser_info = models.CharField(max_length=255)
-    logged_at = models.DateTimeField(auto_now_add=True)
+    logged_at = models.DateTimeField(null=False)
     logged_out_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.session_key}, {self.user.username} {self.ip_address}, {self.location} {self.logged_at}'
 
+    def save(self, *args, **kwargs):
+        if not self.pk:  # This will check if it is a new object
+            self.logged_at = datetime.now()
+        super().save(*args, **kwargs)
+
     # def save(self, *args, **kwargs):
     #     if not self.pk:  # This will check if it is a new object
     #         self.logged_at = datetime.now()
     #     super().save(*args, **kwargs)
+
+
+class Feedback(models.Model):
+    title = models.CharField(max_length=50)
+    feedback = models.TextField()
+    ip_address = models.CharField(max_length=50)
+    location = models.CharField(max_length=255)
+    browser_info = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, related_name='feedbacks', null=True)
+
+    def __str__(self):
+        return f"{self.title}, {self.feedback}, {self.ip_address} {self.created_at}"

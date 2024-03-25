@@ -2,12 +2,51 @@
 
 {% block body_block %}
 <main>
-    <div class="container mt-5">
-        <h1>User Profile</h1>
-        <p>Username: {{ profile_user.username }}</p>
-        <p>Email: {{ profile_user.email }}</p>
-        {{profile_user.first_name }} {{ profile_user.last_name }}
-        <!-- Add other user profile fields as needed -->
+
+    <!-- Section 1 - User Profile -->
+    <div class="container mx-auto mt-5">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-3xl font-bold mb-4">Welcome to my profile!</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    {% if profile_user.first_name or profile_user.last_name %}
+                    <p class="text-lg"> My name is {{ profile_user.first_name }} {{ profile_user.last_name }}</p>
+                    {% endif %}
+                    <p class="text-lg"><strong>Username:</strong> {{ profile_user.username }}</p>
+                    <p>If you have any queries or need any details about the offerings, feel free to contact me via email:</p>
+                    <p class="text-lg"><strong>Email:</strong> {{ profile_user.email }}</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Section 2 - My Offerings -->
+    <section id="latest-blog" class="padding-large">
+    <div class="container">
+      <div class="section-header d-flex flex-wrap align-items-center justify-content-between">
+        <h2 class="section-title">My Offerings</h2>
+      </div>
+      <div class="row d-flex flex-wrap">
+        {% for service in services_offered %}
+            <article class="col-md-4 post-item">
+            <div class="image-holder zoom-effect">
+                  <a href="{% url 'offering_detail' service.pk %}">
+                     <img src="{{ service.offering_image.url }}" alt="{{ service.title }}" class="post-image" />
+                 </a>
+            </div>
+            <div class="post-content d-flex">
+              <div class="post-header">
+                <h3 class="post-title">
+                  <a href="{% url 'offering_detail' service.pk %}">{{ service.title }}</a>
+                </h3>
+                <p>{{ service.description }}</p>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+        </div>
+      </div>
+  </section>
+
 </main>
 {% endblock %}

@@ -14,7 +14,7 @@
       <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
 
       <!-- create button for payment -->
-        {% if user.is_authenticated and booking.booking_status == 'pending' %}
+        {% if user.is_authenticated and pending_with_price %}
          <button class="button btn btn-primary" type="button" id="submitBtn" data-booking-id="{{ booking.id }}">Pay Now</button>
           <div id="countdown" class="text-danger"></div>
         {% endif %}
@@ -29,7 +29,7 @@
 </div>
 <br />
 
-    {% if user.is_authenticated and booking.booking_status == 'pending' %}
+    {% if user.is_authenticated and pending_with_price  %}
     <script>
         function updateCountdown() {
             const expiryTime = {{ request.session.payment_expiry|default_if_none:"0" }};
