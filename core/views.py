@@ -235,3 +235,4 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         form.save()
         messages.success(self.request, 'Your password has been reset successfully.')
         return super().form_valid(form)
+        

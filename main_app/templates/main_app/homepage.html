@@ -1,103 +1,212 @@
-{% extends 'main_app/index.html' %} {% load static %}
-
-<!-- {% block title %}Find Your Guide{% endblock %} -->
-
-{% block body_block %}
+{% extends 'main_app/index.html' %} {% load static %} {% block body_block %}
 <style>
-  /* make divs of this container to be two columns */
-  .main_comtainer {
-    display: flex;
-    flex-wrap: wrap;
+  /* Make each row contain three cards */
+  .main_container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    max-width: 80%;
+    margin: auto;
   }
-  
+
+  /* Ensure all images have the same size and cover the card */
+  .card {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .card img {
+    width: 100%;
+    height: 200px; /* Set the desired height for all images */
+    object-fit: cover;
+    border-radius: 10px 10px 0 0; /* Ensure rounded corners for the top of the image */
+  }
+
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .card-content h5 {
+    margin-bottom: 0.5rem;
+  }
+
+  .card-content p {
+    margin-bottom: 1rem;
+  }
+
+  .card-content .btn-container {
+    margin-top: auto;
+  }
 </style>
 
-<!-- list all the Offering from the context -->
-<!-- <div> -->
-  <div class="col-md-8 offset-md-2">
-    <form action="{% url 'index' %}" method="GET">
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search for..."
-          name="search_query"
+<form class="max-w-md mx-auto" action="{% url 'index' %}" method="GET">
+  <label
+    for="default-search"
+    class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+    >Search</label
+  >
+  <div class="relative">
+    <div
+      class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+    >
+      <svg
+        class="w-4 h-4 text-gray-500 dark:text-gray-400"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
         />
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit">
-            Search
-          </button>
-        </div>
-      </div>
-    </form>
+      </svg>
+    </div>
+    <input
+      type="search"
+      id="default-search"
+      class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="Search Mockups, Logos..."
+      required
+      style="padding-inline: 35px !important"
+      name="search_query"
+    />
+    <button
+      type="submit"
+      class="text-white absolute end-2.5 bottom-[5px] bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      Search
+    </button>
   </div>
-  <div class="col-md-8 offset-md-2 main_comtainer">
-    <div class="container mt-5">
-      <div class="row">
-        {% for offering in offerings %}
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <img
-              class="card-img-top"
-              src="{{ offering.offering_image.url }}"
-              alt="{{ offering.title }}"
-              style="width: 100%; height: 200px; object-fit: cover;"
+</form>
 
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{ offering.title }}</h5>
-              <p class="card-text">{{ offering.description }}</p>
-              {% if user.is_authenticated and request.user == offering.host_user %}
-              <a
-                href="{% url 'offering_detail' offering.id %}"
-                class="btn btn-primary"
-                >View</a>
-                {% else %}
-              <a
-                href="{% url 'offering_page' offering.id %}"
-                class="btn btn-primary"
-                >View</a
-              >
-              {% endif %}
-            </div>
-          </div>
-        </div>
-        {% endfor %}
+<div class="main_container">
+  {% for offering in offerings %}
+  <div
+    class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 card"
+  >
+    <a href="#">
+      <img
+        class="rounded-t-lg"
+        src="{{ offering.offering_image.url }}"
+        alt="{{ offering.title }}"
+      />
+    </a>
+    <div class="card-content">
+      <div>
+        <a href="#">
+          <h5
+            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            {{ offering.title }}
+          </h5>
+        </a>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          {{ offering.description }}
+        </p>
       </div>
-      <div class="row">
-        <p> Recently Viewed Offerings </p>
-        {% for offering in recently_viewed_offerings %}
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <img
-              class="card-img-top"
-              src="{{ offering.offering_image.url }}"
-              alt="{{ offering.title }}"
-              style="width: 100%; height: 200px; object-fit: cover;"
+      <div class="btn-container">
+        {% if request.user.is_authenticated and request.user == offering.host_user %}
+        <a
+          href="{% url 'offering_detail' offering.id %}"
+          class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >View
+          <svg
+            class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M1 5h12m0 0L9 1m4 4L9 9"
             />
-            <div class="card-body">
-              <h5 class="card-title">{{ offering.title }}</h5>
-              <p class="card-text">{{ offering.description }}</p>
-              {% if user.is_authenticated and request.user == offering.host_user %}
-              <a
-                href="{% url 'offering_detail' offering.id %}"
-                class="btn btn-primary"
-                >View</a>
-                {% else %}
-              <a
-                href="{% url 'offering_page' offering.id %}"
-                class="btn btn-primary"
-                >View</a
-              >
-              {% endif %}
-            </div>
-          </div>
-        </div>
-        {% endfor %}
+          </svg>
+        </a>
+        {% else %}
+        <a
+          href="{% url 'offering_page' offering.id %}"
+          class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >View
+          <svg
+            class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M1 5h12m0 0L9 1m4 4L9 9"
+            />
+          </svg>
+        </a>
+        {% endif %}
       </div>
-
-
-      {% endblock %}
     </div>
   </div>
+  {% endfor %}
 </div>
+
+<div class="container mx-auto w-4/5 mt-20">
+  <div class="row">
+    <p class="text-[25px] font-bold">Recently Viewed Offerings</p>
+    {% for offering in recently_viewed_offerings %}
+    <div class="col-md-4 mb-10">
+      <div
+        class="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-full"
+      >
+        <div
+          class="relative h-56 mx-4 -mt-6 overflow-hidden text-white shadow-lg bg-clip-border rounded-xl bg-blue-gray-500 shadow-blue-gray-500/40"
+        >
+          <img
+            src="{{ offering.offering_image.url }}"
+            alt="{{ offering.title }}"
+            class="object-cover w-full h-full"
+          />
+        </div>
+        <div class="p-6">
+          <h5
+            class="block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900"
+          >
+            {{ offering.title }}
+          </h5>
+          <p
+            class="block font-sans text-base antialiased font-light leading-relaxed text-inherit"
+          >
+            {{ offering.description }}
+          </p>
+        </div>
+        <div class="p-6 pt-0">
+          <a
+            href="{% url 'offering_detail' offering.id %}"
+            class="align-middle select-none font-sans font-bold text-center uppercase transition-all text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+          >
+            View
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
