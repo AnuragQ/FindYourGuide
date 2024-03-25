@@ -232,11 +232,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         return context
 
     def form_valid(self, form):
-        try:
-            form.save()
-            messages.success(self.request, 'Your password has been reset successfully.')
-            return super().form_valid(form)
-        except Exception as e:
-            messages.error(self.request, f"You are not registered please register first.")
-            return redirect('signup')
+        form.save()
+        messages.success(self.request, 'Your password has been reset successfully.')
+        return super().form_valid(form)
         
