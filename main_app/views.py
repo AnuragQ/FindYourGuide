@@ -30,11 +30,13 @@ from django.contrib import messages
 def index(request):
     q = request.GET.get(
         'search_query') if request.GET.get('search_query') != None else ''
-
+    requesting_user = request.user
+    if not requesting_user.is_authenticated:
+       requesting_user=None
     offerings = Offering.objects.filter(
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
-    ).filter(is_available=True).exclude(host_user=request.user)
+    ).filter(is_available=True).exclude(host_user=requesting_user)
 
     recently_viewed_offerings = []
     if 'recently_viewed_offerings' in request.COOKIES:
