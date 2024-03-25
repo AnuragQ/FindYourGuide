@@ -1,147 +1,127 @@
-{% extends 'main_app/index.html' %}
-{% load static %}
-
-{% block body_block %}
-<main>
-  <div class="main-content d-flex flex-wrap">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="post-meta">
-            <span class="post-date"
-              >Joined on {{ user.date_joined|date:"M d, Y" }}</span
-            >
-          </div>
-          <h1 class="page-title">
-            Exploring the world through my lens, one snapshot at a time.
-          </h1>
-          <div class="feature-image">
-            <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static '/images/default-avatar.png' %}{% endif %}" alt="Profile Picture" />
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="post-content">
-            <h2>User Details</h2>
-            <p>Username: {{ user.username }}</p>
-            <p>Email: {{ user.email }}</p>
-                                    {% if user.bio %}
-                        <p>Bio: {{ user.bio }}</p>
-                        {% endif %}
-                        {% if user.location %}
-                        <p>Location: {{ user.location }}</p>
-                        {% endif %}
-                        {% if user.occupation %}
-                        <p>Occupation: {{ user.occupation }}</p>
-                        {% endif %}
-                        {% if user.hobbies %}
-                        <p>Hobbies: {{ user.hobbies }}</p>
-                        {% endif %}
-                        {% if user.languages %}
-                        <p>Languages: {{ user.languages }}</p>
-                        {% endif %}
-                        {% if user.travel_destinations %}
-                        <p>Travel Destinations: {{ user.travel_destinations }}</p>
-                        {% endif %}
-                        {% if user.goals %}
-                        <p>Goals: {{ user.goals }}</p>
-                        {% endif %}
-            <div class="post-tags">
-              <div class="block-tag">
-                <ul class="list-unstyled d-flex">
-                  <li>
-                    <a
-                      href="{%  url 'editprofile' %}"
-                      class="btn btn-dark btn-small btn-rounded"
-                      >Edit Profile</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="{%  url 'addoffering' %}"
-                      class="btn btn-dark btn-small btn-rounded"
-                      >Add Offering</a
-                    >
-                  </li>
-                </ul>
-              </div>
+{% extends 'main_app/index.html' %} {% load static %} {% block body_block %}
+<main class="bg-gray-100">
+  <div class="main-content py-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap -mx-4">
+        <div class="w-full md:w-1/2 px-4 mb-8">
+          <div class="bg-white shadow-md p-6">
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-gray-600 text-sm">
+                Joined on {{ user.date_joined|date:"M d, Y" }}
+              </span>
+            </div>
+            <h1 class="text-2xl font-bold mb-4">
+              Exploring the world through my lens, one snapshot at a time.
+            </h1>
+            <div class="mb-4">
+              <img
+                src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static '/images/default-avatar.png' %}{% endif %}"
+                alt="Profile Picture"
+                class="rounded-full w-24 h-24 object-cover"
+              />
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold mb-2">User Details</h2>
+              <p class="mb-2">Username: {{ user.username }}</p>
+              <p class="mb-2">Email: {{ user.email }}</p>
+              {% if user.bio %}
+              <p class="mb-2">Bio: {{ user.bio }}</p>
+              {% endif %} {% if user.location %}
+              <p class="mb-2">Location: {{ user.location }}</p>
+              {% endif %} {% if user.occupation %}
+              <p class="mb-2">Occupation: {{ user.occupation }}</p>
+              {% endif %} {% if user.hobbies %}
+              <p class="mb-2">Hobbies: {{ user.hobbies }}</p>
+              {% endif %} {% if user.languages %}
+              <p class="mb-2">Languages: {{ user.languages }}</p>
+              {% endif %} {% if user.travel_destinations %}
+              <p class="mb-2">
+                Travel Destinations: {{ user.travel_destinations }}
+              </p>
+              {% endif %} {% if user.goals %}
+              <p class="mb-2">Goals: {{ user.goals }}</p>
+              {% endif %}
+            </div>
+            <div class="mt-6">
+              <a
+                href="{% url 'editprofile' %}"
+                class="btn btn-dark btn-small btn-rounded mr-4"
+                >Edit Profile</a
+              >
+              <a
+                href="{% url 'addoffering' %}"
+                class="btn btn-dark btn-small btn-rounded"
+                >Add Offering</a
+              >
             </div>
           </div>
+        </div>
+        <div class="w-full md:w-1/2 px-4 mb-8">
+          <section class="bg-gray-100 shadow-md p-6 mb-8 rounded-lg">
+            <h2 class="text-2xl font-bold mb-6">My Offerings</h2>
+            <div class="flex overflow-x-auto justify-center">
+              <div class="flex flex-col gap-6">
+                {% if services_offered %} {% for service in services_offered %}
+                <a
+                  href="{% url 'offering_detail' service.pk %}"
+                  class="flex flex-col items-center bg-gray-800 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-700"
+                >
+                  <img
+                    src="{{ service.offering_image.url }}"
+                    alt="{{ service.title }}"
+                    class="object-cover w-full rounded-t-lg h-40 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                  />
+                  <div class="flex flex-col justify-between p-4 leading-normal">
+                    <h5
+                      class="mb-2 text-2xl font-bold tracking-tight text-white"
+                    >
+                      {{ service.title }}
+                    </h5>
+                    <p class="mb-3 font-normal text-gray-300">
+                      {{ service.description }}
+                    </p>
+                  </div>
+                </a>
+                {% endfor %} {% else %}
+                <p class="text-gray-600">You do not have any offerings yet</p>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+          <section class="bg-gray-100 shadow-md p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-6">My Bookings</h2>
+            <div class="flex overflow-x-auto justify-center">
+              <div class="flex flex-col gap-6">
+                {% if services_taken %} {% for service in services_taken %}
+                <a
+                  href="{% url 'booking_detail' service.pk %}"
+                  class="flex flex-col items-center bg-gray-800 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-700"
+                >
+                  <img
+                    src="{{ service.offering.offering_image.url }}"
+                    alt="{{ service.title }}"
+                    class="object-cover w-full rounded-t-lg h-40 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                  />
+                  <div class="flex flex-col justify-between p-4 leading-normal">
+                    <h5
+                      class="mb-2 text-2xl font-bold tracking-tight text-white"
+                    >
+                      {{ service.offering.title }}
+                    </h5>
+                    <p class="mb-3 font-normal text-gray-300">
+                      {{ service.offering.description }}
+                    </p>
+                  </div>
+                </a>
+                {% endfor %} {% else %}
+                <p class="text-gray-600">You do not have any bookings yet</p>
+                {% endif %}
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
   </div>
-
-
-  <!-- Section 2 - My Offerings-->
-  <section id="latest-blog" class="padding-large">
-    <div class="container">
-      <div
-        class="section-header d-flex flex-wrap align-items-center justify-content-between"
-      >
-        <h2 class="section-title">My Offerings</h2>
-      </div>
-      <div class="row d-flex flex-wrap">
-      {% if services_offered %}
-        {% for service in services_offered %}
-            <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-                  <a href="{% url 'offering_detail' service.pk %}">
-                     <img src="{{ service.offering_image.url }}" alt="{{ service.title }}" class="post-image" />
-                 </a>
-            </div>
-            <div class="post-content d-flex">
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="{% url 'offering_detail' service.pk %}">{{ service.title }}</a>
-                </h3>
-                <p>{{ service.description }}</p>
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      {% else %}
-                <p>You do not have any offerings yet</p>
-                {% endif %}
-        </div>
-      </div>
-  </section>
-
-    <!-- Section 3 - My Bookings-->
- <section id="latest-blog" class="padding-large">
-    <div class="container">
-      <div
-        class="section-header d-flex flex-wrap align-items-center justify-content-between"
-      >
-        <h2 class="section-title">My Bookings</h2>
-      </div>
-      <div class="row d-flex flex-wrap">
-      {% if services_taken %}
-        {% for service in services_taken %}
-            <article class="col-md-4 post-item">
-            <div class="image-holder zoom-effect">
-                  <a href="{% url 'booking_detail' service.pk %}">
-                     <img src="{{ service.offering.offering_image.url }}" alt="{{ service.title }}" class="post-image" />
-                 </a>
-            </div>
-            <div class="post-content d-flex">
-              <div class="post-header">
-                <h3 class="post-title">
-                  <a href="{% url 'booking_detail' service.pk %}">{{ service.offering.title }}</a>
-                </h3>
-                <p>{{ service.offering.description }}</p>
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      {% else %}
-                <p>You do not have any bookings yet</p>
-                {% endif %}
-        </div>
-      </div>
-  </section>
-
-
 </main>
-
-
 {% endblock %}
