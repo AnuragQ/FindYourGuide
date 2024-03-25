@@ -47,11 +47,18 @@
             <div class="card-body">
               <h5 class="card-title">{{ offering.title }}</h5>
               <p class="card-text">{{ offering.description }}</p>
+              {% if user.is_authenticated and request.user == offering.host_user %}
               <a
                 href="{% url 'offering_detail' offering.id %}"
                 class="btn btn-primary"
+                >View</a>
+                {% else %}
+              <a
+                href="{% url 'offering_page' offering.id %}"
+                class="btn btn-primary"
                 >View</a
               >
+              {% endif %}
             </div>
           </div>
         </div>
@@ -71,11 +78,18 @@
             <div class="card-body">
               <h5 class="card-title">{{ offering.title }}</h5>
               <p class="card-text">{{ offering.description }}</p>
+              {% if user.is_authenticated and request.user == offering.host_user %}
               <a
                 href="{% url 'offering_detail' offering.id %}"
                 class="btn btn-primary"
+                >View</a>
+                {% else %}
+              <a
+                href="{% url 'offering_page' offering.id %}"
+                class="btn btn-primary"
                 >View</a
               >
+              {% endif %}
             </div>
           </div>
         </div>
