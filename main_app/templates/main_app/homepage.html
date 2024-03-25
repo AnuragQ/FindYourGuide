@@ -30,7 +30,30 @@
         </div>
       </div>
     </form>
-  </div>
+  </div> 
+  <div class="container">
+        <div class="filter-pane">
+            <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Filter</button>
+            </form>
+        </div>
+        <div class="results-pane">
+            {#    Lisitng logic#}
+            {% if list_of_offerings %}
+            <ul>
+            {% for listing in list_of_offerings %}
+                <li>
+                    <a href="{% url 'offering_detail' listing.pk %}">{{ listing.title }} - {{ listing.description }}</a>
+                </li>
+                
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+
   <div class="col-md-8 offset-md-2 main_comtainer">
     <div class="container mt-5">
       <div class="row">

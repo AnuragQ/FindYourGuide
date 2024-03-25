@@ -11,7 +11,7 @@ from .models import Offering, User, LoginSession
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import CustomSignUpForm, OfferingForm, EditProfileForm, FeedbackForm
+from .forms import CustomSignUpForm, OfferingFilterForm, OfferingForm, EditProfileForm, FeedbackForm
 from django.contrib.auth import logout
 from .models import Offering, Booking
 from django.db.models import Q, Avg
@@ -31,7 +31,7 @@ def index(request):
     q = request.GET.get(
         'search_query') if request.GET.get('search_query') != None else ''
 
-    offerings = Offering.objects.filter(
+    list_of_offerings = Offering.objects.filter(
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
     ).filter(is_available=True).exclude(host_user=request.user)
@@ -47,10 +47,46 @@ def index(request):
         recently_viewed_offerings = Offering.objects.filter(
             id__in=recently_viewed_offerings_ids)
 
+    if request.method == 'POST':
+        form = OfferingFilterForm(request.POST)
+        if form.is_valid():
+
+            price_min = form.cleaned_data.get('price_min')
+            price_max = form.cleaned_data.get('price_max')
+            host_user = form.cleaned_data.get('host_user')
+            availability_start_date_min = form.cleaned_data.get(
+                'availability_start_date_min')
+            availability_start_date_max = form.cleaned_data.get(
+                'availability_start_date_max')
+            offering_type = form.cleaned_data['offering_type']
+
+            # if No option is selected then it will return None
+            if price_min:
+                list_of_offerings = list_of_offerings.filter(
+                    price__gte=price_min)
+            if price_max:
+                list_of_offerings = list_of_offerings.filter(
+                    price__lte=price_max)
+            if host_user:
+                list_of_offerings = list_of_offerings.filter(
+                    host_user=host_user)
+            if availability_start_date_min:
+                list_of_offerings = list_of_offerings.filter(
+                    availability_start_date__gte=availability_start_date_min)
+            if availability_start_date_max:
+                list_of_offerings = list_of_offerings.filter(
+                    availability_start_date__lte=availability_start_date_max)
+            if offering_type:
+                list_of_offerings = list_of_offerings.filter(
+                    offering_type=offering_type)
+    else:
+        form = OfferingForm()
+
     # print(offerings)
     context = {
-        'offerings': offerings,
-        'recently_viewed_offerings': recently_viewed_offerings
+        'offerings': list_of_offerings,
+        'recently_viewed_offerings': recently_viewed_offerings,
+        'form': form
     }
     return render(request, 'main_app/homepage.html', context)
 

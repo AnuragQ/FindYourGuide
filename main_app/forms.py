@@ -9,6 +9,7 @@ from main_app.models import Offering
 
 from datetime import date
 
+
 class CustomSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
@@ -32,8 +33,6 @@ class BookingForm(ModelForm):
         }
 
 
-
-
 class OfferingForm(forms.ModelForm):
     class Meta:
         model = Offering
@@ -45,6 +44,25 @@ class OfferingForm(forms.ModelForm):
             'availability_start_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
             'availability_end_date': forms.DateInput(attrs={'type': 'date', 'min': str(date.today())}),
         }
+
+
+class OfferingFilterForm(forms.Form):
+    offering_type_choices = [(None, "-------")] + \
+        Offering.OFFERING_TYPE_CHOICES
+    offering_type = forms.ChoiceField(
+        choices=offering_type_choices, required=False, initial=None)
+    # Other fields
+
+    price_min = forms.DecimalField(
+        max_digits=10, decimal_places=2, required=False)
+    price_max = forms.DecimalField(
+        max_digits=10, decimal_places=2, required=False)
+    host_user = forms.ModelChoiceField(
+        queryset=User.objects.all(), required=False)
+    availability_start_date_min = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    availability_start_date_max = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
 
 class RatingForm(forms.ModelForm):
@@ -71,7 +89,8 @@ class ReviewForm(forms.ModelForm):
         (4, '★★★★'),
         (5, '★★★★★'),
     ]
-    score = forms.ChoiceField(choices=SCORE_CHOICES, widget=forms.Select(), label='Rating')
+    score = forms.ChoiceField(choices=SCORE_CHOICES,
+                              widget=forms.Select(), label='Rating')
 
     class Meta:
         model = Review
@@ -93,7 +112,7 @@ class EditProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = (
-        'email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
+            'email', 'bio', 'location', 'occupation', 'hobbies', 'languages', 'travel_destinations', 'goals', 'avatar')
 
 
 class FeedbackForm(forms.ModelForm):
