@@ -1,11 +1,77 @@
-{% extends 'main_app/index.html' %} {% load static %} {%  block body_block  %}
+{% extends 'main_app/index.html' %} {% load static %} {% block body_block %}
 
-<div class="container mt-5 Booking">
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="submit" />
-    </form>
+<style>
+  /* Center the form container */
+  .form-container {
+    color: white;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    padding-bottom: 5px;
+    padding-top: 30px;
+    padding-inline: 40px;
+    background-color: #1a202c; /* Dark background color */
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Style for the form elements */
+  .form-container form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  input[name="booking_start_date"],
+  input[name="booking_end_date"] {
+    color: black;
+    padding-inline: 5px;
+  }
+
+  /* Style for the form input fields */
+  .form-container input[type="text"],
+  .form-container input[type="email"],
+  .form-container input[type="password"] {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #374151; /* Darker border color */
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #2d3748; /* Darker input background color */
+    color: #ffffff; /* Text color */
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  /* Hover style for the form input fields */
+  .form-container input[type="text"]:focus,
+  .form-container input[type="email"]:focus,
+  .form-container input[type="password"]:focus {
+    border-color: #4a90e2; /* Accent color */
+    outline: none;
+  }
+
+  /* Style for the submit button */
+  .form-container input[type="submit"] {
+    padding: 12px;
+    background-color: #4a90e2; /* Accent color */
+    color: #ffffff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  /* Hover style for the submit button */
+  .form-container input[type="submit"]:hover {
+    background-color: #357ae8; /* Darker accent color */
+  }
+</style>
+
+<div class="container mt-5 form-container">
+  <form action="" method="POST">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Submit" />
+  </form>
 </div>
 
 {% endblock %}
