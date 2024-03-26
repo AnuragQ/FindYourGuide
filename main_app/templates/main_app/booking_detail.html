@@ -1,11 +1,13 @@
 {% extends 'main_app/index.html' %} {% block body_block %} {% load static %}
 
-<!-- show booking details including the status of the booking , offerring title, offerring host, booking date-->
+<!-- Show booking details including the status of the booking, offering title, offering host, booking date -->
 <div class="container mt-5">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <h2>Your Booking for "{{ offering.title }}"</h2>
-      <p class="display-4">
+  <div class="mx-auto max-w-2xl bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4">
+        Your Booking for "{{ offering.title }}"
+      </h2>
+      <p class="text-lg">
         <strong>Status:</strong> {{ booking.booking_status }}
       </p>
       <p><strong>Host User:</strong> {{ offering.host_user }}</p>
@@ -13,43 +15,57 @@
       <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
       <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
 
-      <!-- create button for payment -->
-        {% if user.is_authenticated and pending_with_price %}
-         <button class="button btn btn-primary" type="button" id="submitBtn" data-booking-id="{{ booking.id }}">Pay Now</button>
-          <div id="countdown" class="text-danger"></div>
-        {% endif %}
-        {% if user.is_authenticated and booking.booking_status == 'confirmed' %}
-            <button class="button btn btn-success" type="button">Confirmed</button>
-            {% endif %}
-        {% if user.is_authenticated and booking.booking_status == 'cancelled' %}
-            <button class="button btn btn-dark" type="button">Cancelled</button>
-            {% endif %}
+      <!-- Create button for payment -->
+      {% if user.is_authenticated and pending_with_price %}
+      <button
+        class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="button"
+        id="submitBtn"
+        data-booking-id="{{ booking.id }}"
+      >
+        Pay Now
+      </button>
+      <div class="mt-2 text-red-500" id="countdown"></div>
+      {% endif %} {% if user.is_authenticated and booking.booking_status == 'confirmed' %}
+      <button
+        class="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        type="button"
+      >
+        Confirmed
+      </button>
+      {% endif %} {% if user.is_authenticated and booking.booking_status == 'cancelled' %}
+      <button
+        class="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
+        type="button"
+      >
+        Cancelled
+      </button>
+      {% endif %}
     </div>
   </div>
 </div>
 <br />
 
-    {% if user.is_authenticated and pending_with_price  %}
-    <script>
-        function updateCountdown() {
-            const expiryTime = {{ request.session.payment_expiry|default_if_none:"0" }};
-            const currentTime = Math.floor(Date.now() / 1000);
-            const secondsRemaining =expiryTime - currentTime;
+{% if user.is_authenticated and pending_with_price %}
+<script>
+  function updateCountdown() {
+    const expiryTime = {{ request.session.payment_expiry|default_if_none:"0" }};
+    const currentTime = Math.floor(Date.now() / 1000);
+    const secondsRemaining = expiryTime - currentTime;
 
-            if (secondsRemaining <= 0) {
-                document.getElementById('countdown').innerHTML = "Payment expired!";
-                const bookingId = {{ booking.id }};
-                window.location.href= `/cancel_booking/${bookingId}`
-            } else {
-                document.getElementById('countdown').innerHTML = "Payment will expire in " + secondsRemaining + " seconds.";
-                setTimeout(updateCountdown, 1000); // Update every second
-            }
-        }
+    if (secondsRemaining <= 0) {
+      document.getElementById('countdown').innerHTML = "Payment expired!";
+      const bookingId = {{ booking.id }};
+      window.location.href = `/cancel_booking/${bookingId}`
+    } else {
+      document.getElementById('countdown').innerHTML = "Payment will expire in " + parseInt(secondsRemaining) + " seconds.";
+      setTimeout(updateCountdown, 1000); // Update every second
+    }
+  }
 
-        window.onload = updateCountdown;
-    </script>
+  window.onload = updateCountdown;
+</script>
 
-     <script src="https://js.stripe.com/v3/"></script>
-     <script src="{% static 'payment.js' %}"></script>
-    {% endif %}
-{% endblock %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'payment.js' %}"></script>
+{% endif %} {% endblock %}
