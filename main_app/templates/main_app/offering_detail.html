@@ -12,7 +12,7 @@
   <div class="bg-white shadow-md rounded-md px-8 py-6">
     <h2 class="text-2xl font-semibold">{{ offering.title }}</h2>
     <p class="text-lg"><strong>Description:</strong> {{ offering.description }}</p>
-    <p class="text-lg"><strong>Price:</strong> {{ offering.price }}</p>
+    <p class="text-lg"><strong>Price:</strong> ${{ offering.price }}</p>
     <p class="text-lg"><strong>Host User:</strong> <a href="{% url 'user_profile' offering.host_user.username %}" class="text-blue-500 hover:underline">{{ offering.host_user.username }}</a></p>
     <p class="text-lg"><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
     <p class="text-lg"><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
