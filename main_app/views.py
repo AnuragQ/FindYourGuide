@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
 
 from django.contrib.auth.decorators import login_required
+from django.forms import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
@@ -32,7 +33,7 @@ def index(request):
         'search_query') if request.GET.get('search_query') != None else ''
     requesting_user = request.user
     if not requesting_user.is_authenticated:
-       requesting_user=None
+        requesting_user = None
     offerings = Offering.objects.filter(
         Q(title__icontains=q) | Q(description__icontains=q)
         # | Q(    host_user__username__icontains=q)
@@ -154,6 +155,16 @@ def create_booking(request, offering_id):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
+            # check if booking start date is after offering availability start date show message
+            if form.cleaned_data['booking_start_date'] < offering.availability_start_date:
+                messages.error(
+                    request, 'Booking start date cannot be before offering availability start date')
+                return render(request, 'main_app/booking.html', {'form': form})
+            # check if booking end date is before offering availability end date
+            if form.cleaned_data['booking_end_date'] > offering.availability_end_date:
+                messages.error(
+                    request, 'Booking end date cannot be after offering availability end date')
+                return render(request, 'main_app/booking.html', {'form': form})
             booking = form.save(commit=False)
             booking.offering = offering
             booking.guest_user = request.user
@@ -179,11 +190,13 @@ def cancel_booking(request, booking_id):
         booking.save()
         # set offering as available
         offering = Offering.objects.get(id=booking.offering.id)
+        offering.is_available = True
+        offering.save()
         print("Removing payment expiry session")
         if 'payment_expiry' in request.session:
             del request.session['payment_expiry']
-        # Redirect to a booking list page or any other page
-        return redirect('index')
+        # Redirect to booking detail page
+        return redirect('booking_detail', pk=booking.id)
     else:
         # Handle unauthorized cancel attempt (optional)
         return render(request, 'error.html', {'message': 'You are not authorized to cancel this booking.'})

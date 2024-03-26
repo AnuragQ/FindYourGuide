@@ -26,20 +26,32 @@
         Pay Now
       </button>
       <div class="mt-2 text-red-500" id="countdown"></div>
-      {% endif %} {% if user.is_authenticated and booking.booking_status == 'confirmed' %}
+      {% endif %}
+      {% if user.is_authenticated and booking.booking_status == 'confirmed' %}
       <button
         class="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         type="button"
+        onclick="window.location.href = '{% url 'cancel_booking' booking.id %}';"
       >
-        Confirmed
+        Cancel Booking
       </button>
-      {% endif %} {% if user.is_authenticated and booking.booking_status == 'cancelled' %}
+      {% elif user.is_authenticated and booking.booking_status == 'cancelled' and offering.is_available %}
+      
       <button
-        class="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
-        type="button"
-      >
-        Cancelled
-      </button>
+          class="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
+          type="button"
+          onclick="window.location.href = '{% url 'create_booking' offering.id %}';"
+        >
+          Book Again
+        </button>
+        {% elif user.is_authenticated and booking.booking_status == 'cancelled' and not offering.is_available %}
+        <button
+          class="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
+          type="button"
+        >
+          Cancelled
+        </button>
+        
       {% endif %}
     </div>
   </div>
