@@ -51,6 +51,7 @@ class Offering(models.Model):
     offering_time = models.TimeField(null=True, blank=True)
 
     def clean(self):
+        # return
         if self.availability_start_date > self.availability_end_date:
             raise ValidationError(
                 "Availability end date cannot be before availability start date")

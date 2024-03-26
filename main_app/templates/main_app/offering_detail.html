@@ -8,62 +8,37 @@
 
 {% block body_block %}
 
-{#If you want all users to view the offerings, but only authenticated users who are also the host user to edit or delete the form, you can use conditional logic in your template to show the edit and delete options only to authenticated users who are the host of the offering.#}
-{##}
-{#Here's how you can modify your offering_detail.html template to achieve this:#}
-
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-    <h2>{{ offering.title }}</h2>
-    <p  class="display-4"><strong>Description:</strong> {{ offering.description }}</p>
-    <p><strong>Price:</strong> {{ offering.price }}</p>
-    <p><strong>Host User:</strong> <a href="{% url 'user_profile' offering.host_user.username %}">{{ offering.host_user.username }}</a></p>
-    <p><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
-    <p><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
-    <p><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
+<div class="container mx-auto mt-5">
+  <div class="bg-white shadow-md rounded-md px-8 py-6">
+    <h2 class="text-2xl font-semibold">{{ offering.title }}</h2>
+    <p class="text-lg"><strong>Description:</strong> {{ offering.description }}</p>
+    <p class="text-lg"><strong>Price:</strong> ${{ offering.price }}</p>
+    <p class="text-lg"><strong>Host User:</strong> <a href="{% url 'user_profile' offering.host_user.username %}" class="text-blue-500 hover:underline">{{ offering.host_user.username }}</a></p>
+    <p class="text-lg"><strong>Start Date:</strong> {{ offering.availability_start_date }}</p>
+    <p class="text-lg"><strong>End Date:</strong> {{ offering.availability_end_date }}</p>
+    <p class="text-lg"><strong>Offering Type:</strong> {{ offering.offering_type }}</p>
+    <p class="text-lg"><strong>Time:</strong> {{ offering.offering_time }}</p>
     {% if offering.offering_image %}
-        <img src="{{ offering.offering_image.url }}" alt="Offering Image">
+        <img src="{{ offering.offering_image.url }}" alt="Offering Image" class="mt-4 rounded-lg">
     {% endif %}
-
-    <p><strong>Time:</strong> {{ offering.offering_time }}</p>
     
-
-      <div>
     {% if request.user.is_authenticated and request.user == offering.host_user %}
-     <div class="row">
-    <div class="col">
-        <form action="{% url 'offering_edit' pk=offering.pk %}" method="get" class="edit-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Edit </button>
-        </form>
+    <div class="mt-6 flex items-center space-x-4">
+      <form action="{% url 'offering_edit' pk=offering.pk %}" method="get" class="edit-form">
+        {% csrf_token %}
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">Edit</button>
+      </form>
+      <form action="{% url 'offering_delete' pk=offering.pk %}" method="get" class="delete-form">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg">Delete</button>
+      </form>
+      <form action="{% url 'offering_page' pk=offering.pk %}" method="get" class="view-form">
+        {% csrf_token %}
+        <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">View</button>
+      </form>
     </div>
-    <div class="col">
-        <form action="{% url 'offering_delete' pk=offering.pk %}" method="get" class="delete-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Delete</button>
-        </form>
-    </div>
-     <div class="col">
-        <form action="{% url 'offering_page' pk=offering.pk %}" method="get" class="edit-form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">View</button>
-        </form>
-    </div>
-</div>
-        </div>
-
     {% endif %}
-     </div>
+  </div>
 </div>
-
- 
-
 
 {% endblock %}
-
-
-
-
-
-
