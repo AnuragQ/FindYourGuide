@@ -75,7 +75,7 @@ def get_stripe_payment_info(request, session_id):
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'GET':
-        domain_url = 'http://127.0.0.1:8000/'
+        domain_url = 'http://localhost:8000/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             booking_id = request.GET.get('booking_id')
