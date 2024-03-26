@@ -1,11 +1,31 @@
-{% extends 'main_app/index.html' %} 
-{% block body_block %}
-<div>
- <form method="post" enctype="multipart/form-data">
+{% extends 'main_app/index.html' %} {% block body_block %}
+<div
+  class="container mx-auto mt-5 max-w-screen-lg flex justify-center items-center"
+>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    class="bg-white shadow-md rounded-md px-8 py-6"
+  >
     {% csrf_token %}
-   <table>{{ form.as_table }} </table>
-    <button type="submit">Post</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% for field in form %}
+      <div>
+        <label
+          for="{{ field.id_for_label }}"
+          class="block text-gray-800 font-semibold mb-2"
+          >{{ field.label }}</label
+        >
+        {{ field }}
+      </div>
+      {% endfor %}
+    </div>
+    <button
+      type="submit"
+      class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg mt-4 w-full md:w-auto"
+    >
+      Post
+    </button>
   </form>
 </div>
 {% endblock %}
-  
