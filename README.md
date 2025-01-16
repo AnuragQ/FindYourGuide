@@ -24,6 +24,7 @@
      pip install django
      pip install pillow
      pip install stripe
+     pip install pyyaml user-agents
      ```
 
 4. **Configure:**
